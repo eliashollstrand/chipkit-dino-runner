@@ -58,12 +58,13 @@ int main(void) {
 	SPI2CONSET = 0x8000;
 	
 	display_init();
-	display_string(0, "Highscore: ");
+	display_string(0, "Score: ");
+	display_string(2, "Highscore: ");
 	display_update();
 	
 	// display_image(96, icon);
 
-    highscore_init();
+    score_init();
 	
 
 	while(1) {

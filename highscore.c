@@ -74,6 +74,31 @@ uint8_t eeprom_read_byte(uint16_t address) {
     return data;
 }
 
+void eeprom_write_byte(uint16_t address, uint8_t data) {
+    // Step 1: Initialize I2C
+    // (Assuming you have already configured and initialized the I2C module)
+
+    // Step 2: Send start condition
+    i2c_start();
+
+    // Step 3: Send EEPROM device address with write bit set
+    i2c_send(EEPROM_ADDR | EEPROM_WRITE);
+
+    // Step 4: Send the memory address you want to write to
+    i2c_send((uint8_t)(address >> 8)); // MSB of address
+    i2c_send((uint8_t)(address & 0xFF)); // LSB of address
+
+    // Step 5: Send the data to be written
+    i2c_send(data);
+
+    // Step 6: Send stop condition
+    i2c_stop();
+
+    // Add a delay to allow the EEPROM to complete the write operation
+    delay(1000000);
+}
+
+
 
 
 void score_display()
@@ -220,10 +245,10 @@ uint8_t readFromEEPROM(uint8_t address) {
 void score_update()
 {
     score++;
-    // if (score > 10)
+    // if ((int)score > 10)
     // {
     //     highscore = score;
-    //     writeToEEPROM(highscore, SCORE_ADDRESS);
+    //     eeprom_write_byte(SCORE_ADDRESS, highscore);
     // }
 
     score_display();
@@ -248,6 +273,11 @@ void user_isr(void)
 
         // Update the LEDs
         *porte = ledValue;
+
+        eeprom_write_byte(SCORE_ADDRESS, 123);
+        display_string(0, "Wrote to EEPROM");
+        display_string(1, itoaconv(123));
+        display_update();
     }
 
     if (IFS(0) & 0x8000) // switch 3, update led and write to EEPROM
@@ -259,8 +289,9 @@ void user_isr(void)
         // Update the LEDs
         *porte = ledValue;
 
-        writeToEEPROM(ledValue, SCORE_ADDRESS);
-        display_string(0, "Wrote to EEPROM");
+        highscore = eeprom_read_byte(SCORE_ADDRESS);
+        display_string(0, "Read from EEPROM");
+        display_string(1, itoaconv(highscore));
         display_update();
     }
 
@@ -274,8 +305,9 @@ void user_isr(void)
         *porte = ledValue;
 
         // highscore = readFromEEPROM(SCORE_ADDRESS);
-        read_highscore();
-        display_string(0, "Read from EEPROM");
+        // read_highscore();
+        // display_string(0, "Read from EEPROM");
+        display_string(2, display_update());
         display_update();
     }
 

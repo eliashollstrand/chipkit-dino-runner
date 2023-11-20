@@ -865,31 +865,31 @@
 /*--------------------------------------
  * I2C Registers.
  */
-#define I2C1CON		PIC32_R (0x5000)
+#define I2C1CON		PIC32_R (0x5000) /* Control */
 #define I2C1CONCLR	PIC32_R (0x5004)
 #define I2C1CONSET	PIC32_R (0x5008)
 #define I2C1CONINV	PIC32_R (0x500c)
-#define I2C1STAT	PIC32_R (0x5010)
+#define I2C1STAT	PIC32_R (0x5010) /* Status */
 #define I2C1STATCLR	PIC32_R (0x5014)
 #define I2C1STATSET	PIC32_R (0x5018)
 #define I2C1STATINV	PIC32_R (0x501c)
-#define I2C1ADD		PIC32_R (0x5020)
+#define I2C1ADD		PIC32_R (0x5020) /* Slave Address */
 #define I2C1ADDCLR	PIC32_R (0x5024)
 #define I2C1ADDSET	PIC32_R (0x5028)
 #define I2C1ADDINV	PIC32_R (0x502c)
-#define I2C1MSK		PIC32_R (0x5030)
+#define I2C1MSK		PIC32_R (0x5030) /* Address Mask */
 #define I2C1MSKCLR	PIC32_R (0x5034)
 #define I2C1MSKSET	PIC32_R (0x5038)
-#define I2C1MSKINV	PIC32_R (0x503c)
-#define I2C1BRG		PIC32_R (0x5040)
+#define I2C1MSKINV	PIC32_R (0x503c)s
+#define I2C1BRG		PIC32_R (0x5040) /* Baud Rate Generator */
 #define I2C1BRGCLR	PIC32_R (0x5044)
 #define I2C1BRGSET	PIC32_R (0x5048)
 #define I2C1BRGINV	PIC32_R (0x504c)
-#define I2C1TRN		PIC32_R (0x5050)
+#define I2C1TRN		PIC32_R (0x5050) /* Transmit data */
 #define I2C1TRNCLR	PIC32_R (0x5054)
 #define I2C1TRNSET	PIC32_R (0x5058)
 #define I2C1TRNINV	PIC32_R (0x505c)
-#define I2C1RCV		PIC32_R (0x5060)
+#define I2C1RCV		PIC32_R (0x5060) /* Receive data */
 
 #define I2C2CON		PIC32_R (0x5200)
 #define I2C2CONCLR	PIC32_R (0x5204)
@@ -920,38 +920,38 @@
 /*
  * I2C Control register
  */
-#define PIC32_I2CCON_SEN	0x00000001
-#define PIC32_I2CCON_RSEN	0x00000002
-#define PIC32_I2CCON_PEN	0x00000004
-#define PIC32_I2CCON_RCEN	0x00000008
-#define PIC32_I2CCON_ACKEN	0x00000010
-#define PIC32_I2CCON_ACKDT	0x00000020
-#define PIC32_I2CCON_STREN	0x00000040
-#define PIC32_I2CCON_GCEN	0x00000080
-#define PIC32_I2CCON_SMEN	0x00000100
-#define PIC32_I2CCON_DISSLW	0x00000200
-#define PIC32_I2CCON_A10M	0x00000400
-#define PIC32_I2CCON_STRICT	0x00000800
-#define PIC32_I2CCON_SLCREL	0x00001000
-#define PIC32_I2CCON_SIDL	0x00002000
-#define PIC32_I2CCON_ON		0x00008000
+#define PIC32_I2CCON_SEN	0x00000001 // Start Condition Enable bit
+#define PIC32_I2CCON_RSEN	0x00000002 // Repeated Start Condition Enable bit
+#define PIC32_I2CCON_PEN	0x00000004 // Stop Condition Enable bit
+#define PIC32_I2CCON_RCEN	0x00000008 // Receive Enable bit 
+#define PIC32_I2CCON_ACKEN	0x00000010 // Acknowledge Sequence Enable bit 
+#define PIC32_I2CCON_ACKDT	0x00000020 // send Acknowledge Data bit (0 = ACK, 1 = NACK)
+#define PIC32_I2CCON_STREN	0x00000040 // SCLx Clock Stretch Enable bit
+#define PIC32_I2CCON_GCEN	0x00000080 // General Call Enable bit 
+#define PIC32_I2CCON_SMEN	0x00000100 // SMBus Input Levels Disable bit
+#define PIC32_I2CCON_DISSLW	0x00000200 // Slew Rate Control Disable bit
+#define PIC32_I2CCON_A10M	0x00000400 // 10-bit Slave Address bit (0 = 7-bit address)
+#define PIC32_I2CCON_STRICT	0x00000800 // Strict I2C Reserved Address Rule Enable bit
+#define PIC32_I2CCON_SLCREL	0x00001000 // SCL Release Control bit
+#define PIC32_I2CCON_SIDL	0x00002000 // stop in idle mode bit
+#define PIC32_I2CCON_ON		0x00008000 // i2c enable bit
 
 /*
  * I2C Status register
  */
-#define PIC32_I2CSTAT_TBF	0x00000001
-#define PIC32_I2CSTAT_RBF	0x00000002
-#define PIC32_I2CSTAT_RW	0x00000004
-#define PIC32_I2CSTAT_S		0x00000008
-#define PIC32_I2CSTAT_P		0x00000010
-#define PIC32_I2CSTAT_DA	0x00000020
-#define PIC32_I2CSTAT_I2COV	0x00000040
-#define PIC32_I2CSTAT_IWCOL	0x00000080
-#define PIC32_I2CSTAT_ADD10	0x00000100
-#define PIC32_I2CSTAT_GCSTAT	0x00000200
-#define PIC32_I2CSTAT_BCL	0x00000400
-#define PIC32_I2CSTAT_TRSTAT	0x00004000
-#define PIC32_I2CSTAT_ACKSTAT	0x00008000
+#define PIC32_I2CSTAT_TBF	0x00000001 // transmit buffer full status bit
+#define PIC32_I2CSTAT_RBF	0x00000002 // receive buffer full status bit
+#define PIC32_I2CSTAT_RW	0x00000004 // read/write information bit (1 = read from slave, 0 = write)
+#define PIC32_I2CSTAT_S		0x00000008 // start bit
+#define PIC32_I2CSTAT_P		0x00000010 // stop bit
+#define PIC32_I2CSTAT_DA	0x00000020 // data/address bit (1 = last byte data, 0 = address)
+#define PIC32_I2CSTAT_I2COV	0x00000040 // receive overflow status bit
+#define PIC32_I2CSTAT_IWCOL	0x00000080 // write collision detect bit 
+#define PIC32_I2CSTAT_ADD10	0x00000100 // 10-bit address status bit (1 matched, 0 unmatched)
+#define PIC32_I2CSTAT_GCSTAT	0x00000200 // general call status bit
+#define PIC32_I2CSTAT_BCL	0x00000400 // master bus collision detect bit
+#define PIC32_I2CSTAT_TRSTAT	0x00004000 // transmit status bit
+#define PIC32_I2CSTAT_ACKSTAT	0x00008000 // Acknowledge Status bit
 
 /*--------------------------------------
  * DMA controller registers.

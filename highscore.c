@@ -86,7 +86,7 @@ void eeprom_write_byte(uint16_t address, uint8_t data) {
     i2c_stop();
 
     // Add a delay to allow the EEPROM to complete the write operation
-    delay(1000000);
+
 }
 
 void delay(int cyc)
@@ -137,9 +137,9 @@ void user_isr(void)
         // Update the LEDs
         *porte = ledValue;
 
-        eeprom_write_byte(SCORE_ADDRESS, 123);
+        eeprom_write_byte(SCORE_ADDRESS, ledValue);
         display_string(0, "Wrote to EEPROM");
-        display_string(1, itoaconv(123));
+        display_string(1, itoaconv(ledValue));
         display_update();
     }
 
@@ -147,14 +147,14 @@ void user_isr(void)
     {
         IFSCLR(0) = 0x8000;
         // Increase the LED value by 1 (roll over after 255)
-        ledValue = (ledValue + 1) & 0xFF;
+        // ledValue = (ledValue + 1) & 0xFF;
 
-        // Update the LEDs
-        *porte = ledValue;
+        // // Update the LEDs
+        // *porte = ledValue;
 
         highscore = eeprom_read_byte(SCORE_ADDRESS);
         display_string(0, "Read from EEPROM");
-        display_string(1, itoaconv(highscore));
+        display_string(3, itoaconv(highscore));
         display_update();
     }
 

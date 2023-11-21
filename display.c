@@ -151,7 +151,117 @@ void display_update(void) {
 			
 			for(k = 0; k < 8; k++)
 				spi_send_recv(font[c*8 + k]);
+		} // skicka in delar av arrayen här
+	}
+}
+
+// array for pixel data
+uint8_t pixel_data[4][128];
+
+//set pixel at position x,y
+void set_pixel(int x, int y)
+{
+	int row = y / 8; // 8 pixels per row
+	int col = x; // 128 pixels per column
+	pixel_data[row][col] |= 1 << (y % 8); // set bit at position y%8
+}
+
+// clear pixel at position x,y
+void clear_pixel(int x, int y)
+{
+	int row = y / 8; // 8 pixels per row
+	int col = x; // 128 pixels per column
+	pixel_data[row][col] &= ~(1 << (y % 8)); // clear bit at position y%8
+}
+
+// check if pixel at position x,y is set
+int pixel_is_set(int x, int y)
+{
+	int row = y / 8; // 8 pixels per row
+	int col = x; // 128 pixels per column
+	return pixel_data[row][col] & (1 << (y % 8)); // check if bit at position y%8 is set
+}
+
+// clear all pixels
+void clear_all_pixels()
+{
+	int i, j;
+	for (i = 0; i < 4; i++)
+	{
+		for (j = 0; j < 128; j++)
+		{
+			pixel_data[i][j] = 0;
 		}
+	}
+}
+
+// draw a line from x0,y0 to x1,y1
+// void draw_line(int x0, int y0, int x1, int y1)
+// {
+// 	int dx = abs(x1 - x0), sx = x0 < x1 ? 1 : -1;
+// 	int dy = abs(y1 - y0), sy = y0 < y1 ? 1 : -1;
+// 	int err = (dx > dy ? dx : -dy) / 2, e2;
+
+// 	for (;;)
+// 	{
+// 		set_pixel(x0, y0);
+// 		if (x0 == x1 && y0 == y1)
+// 			break;
+// 		e2 = err;
+// 		if (e2 > -dx)
+// 		{
+// 			err -= dy;
+// 			x0 += sx;
+// 		}
+// 		if (e2 < dy)
+// 		{
+// 			err += dx;
+// 			y0 += sy;
+// 		}
+// 	}
+// }
+
+// draw a rectangle from x0,y0 with width w and height h
+// void draw_rectangle(int x0, int y0, int w, int h)
+// {
+// 	int x1 = x0 + w;
+// 	int y1 = y0 + h;
+// 	draw_line(x0, y0, x1, y0);
+// 	draw_line(x0, y0, x0, y1);
+// 	draw_line(x1, y0, x1, y1);
+// 	draw_line(x0, y1, x1, y1);
+// }
+
+void fill_rectangle(int x0, int y0, int w, int h)
+{
+	int x1 = x0 + w;
+	int y1 = y0 + h;
+	int i, j;
+	for (i = x0; i < x1; i++)
+	{
+		for (j = y0; j < y1; j++)
+		{
+			set_pixel(i, j);
+		}
+	}
+}
+
+void display_objects(void) {
+	int i, j, k;
+	int c;
+	for(i = 0; i < 4; i++) {
+		DISPLAY_CHANGE_TO_COMMAND_MODE;
+		spi_send_recv(0x22);
+		spi_send_recv(i);
+		
+		spi_send_recv(0x0);
+		spi_send_recv(0x10);
+		
+		DISPLAY_CHANGE_TO_DATA_MODE;
+		
+		for(j = 0; j < 128; j++) {
+			spi_send_recv(pixel_data[i][j]);
+		} // skicka in delar av arrayen här
 	}
 }
 

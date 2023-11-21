@@ -66,11 +66,11 @@ void chip_init(void)
 
     /* Set up change notice interrupts for button 1 */
     TRISD = TRISD | 0x80;
-    CNCON = 0x8000;
-    IECSET(1) = 0x1;
-    IPCSET(4) = 0x1c000000; // Set priority level 7 // Bits 28-26
-    IPCSET(6) = 0x1C0000;
-    CNEN = 0x10000;
+    // CNCON = 0x8000;
+    // IECSET(1) = 0x1;
+    // IPCSET(4) = 0x1c000000; // Set priority level 7 // Bits 28-26
+    // IPCSET(6) = 0x1C0000;
+    // CNEN = 0x10000;
 
     /* Set up input pins*/
     TRISDSET = (1 << 8);

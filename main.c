@@ -84,7 +84,6 @@ int main(void)
   	TRISD = TRISD | 0x0fe0;
 
 	
-
 	// Enable global interrupts
 	enable_interrupt();
 

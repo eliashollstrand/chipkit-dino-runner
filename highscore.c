@@ -22,7 +22,7 @@ volatile int *porte = (volatile int *)0xbf886110;
 
 #define EEPROM_WRITE 0xA0 // 1010 0000
 #define EEPROM_READ 0xA1  // 1010 0001
-#define SCORE_ADDRESS 0xFFFF
+#define SCORE_ADDRESS 0x0230
 
 
 // uint8_t current_address_read() {
@@ -40,56 +40,49 @@ volatile int *porte = (volatile int *)0xbf886110;
 // }
 
 uint8_t eeprom_read_byte(uint16_t address) {
-    // Step 1: Initialize I2C
-    // (Assuming you have already configured and initialized the I2C module)
-
-    // Step 2: Send start condition
+    // Step 1: Send start condition
     i2c_start();
 
-    // Step 3: Send EEPROM device address with RW-bit = 0
+    // Step 2: Send EEPROM device address with RW-bit = 0
     i2c_send(EEPROM_WRITE);
 
-    // Step 4: Send the memory address you want to read from
-    // i2c_send((uint8_t)(address >> 8)); // MSB of address
+    // Step 3: Send the memory address you want to read from
     i2c_send((uint8_t)(address >> 8)); // MSB of address
     i2c_send((uint8_t)(address & 0xFF)); // LSB of address
 
-    // Step 5: Send restart condition
+    // Step 4: Send restart condition
     i2c_restart();
 
-    // Step 6: Send EEPROM device address with read bit set again
+    // Step 5: Send EEPROM device address with read bit set again
     i2c_send(EEPROM_READ);
 
-    // Step 7: Receive the data from the EEPROM
+    // Step 6: Receive the data from the EEPROM
     uint8_t data = i2c_recv();
 
-    // Step 8: Send NACK to indicate the end of read
+    // Step 7: Send NACK to indicate the end of read
     i2c_nack();
 
-    // Step 9: Send stop condition
+    // Step 8: Send stop condition
     i2c_stop();
 
     return data;
 }
 
 void eeprom_write_byte(uint16_t address, uint8_t data) {
-    // Step 1: Initialize I2C
-    // (Assuming you have already configured and initialized the I2C module)
-
-    // Step 2: Send start condition
+    // Step 1: Send start condition
     i2c_start();
 
-    // Step 3: Send EEPROM device address with RW-bit 
+    // Step 2: Send EEPROM device address with RW-bit 
     i2c_send(EEPROM_WRITE);
 
-    // Step 4: Send the memory address you want to write to
+    // Step 3: Send the memory address you want to write to
     i2c_send((uint8_t)(address >> 8)); // MSB of address
     i2c_send((uint8_t)(address & 0xFF)); // LSB of address
 
-    // Step 5: Send the data to be written
+    // Step 4: Send the data to be written
     i2c_send(data);
 
-    // Step 6: Send stop condition
+    // Step 5: Send stop condition
     i2c_stop();
 
     // Add a delay to allow the EEPROM to complete the write operation
@@ -107,7 +100,7 @@ void score_display()
 {
     display_string(1, itoaconv(score));
 
-    highscore = eeprom_read_byte(SCORE_ADDRESS);
+    // highscore = eeprom_read_byte(SCORE_ADDRESS);
     display_string(3, itoaconv(highscore));
     display_update();
 }
@@ -150,7 +143,7 @@ void user_isr(void)
         display_update();
     }
 
-    if (IFS(0) & 0x8000) // switch 3, update led and write to EEPROM
+    if (IFS(0) & 0x8000) // switch 3, update led and read from EEPROM
     {
         IFSCLR(0) = 0x8000;
         // Increase the LED value by 1 (roll over after 255)
@@ -195,15 +188,13 @@ void user_isr(void)
 
 void score_init()
 {
-
     // Enable global interrupts
     enable_interrupt();
 
-    // Get the high score from EEPROM and store in highscore variable
-    // read_highscore();
-    score = I2C1RCV; // clear buffer
-
     volatile int *trise = (volatile int *)0xbf886100;
+
+    // Get the high score from EEPROM and store in highscore variable
+    highscore = eeprom_read_byte(SCORE_ADDRESS);
 
     // Display score and current highscore
     score_display();

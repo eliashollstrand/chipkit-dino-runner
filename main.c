@@ -94,10 +94,9 @@ int main(void)
 	the 40 MHz peripheral bus clock down */
 	I2C1BRG = 0x0C2;
 	I2C1STAT = 0x0; 
-	I2C1CONSET = 1 << 13; // SIDL = 1 (disables I2C when CPU is idle)
+	// I2C1CONSET = 1 << 13; // SIDL = 1 (disables I2C when CPU is idle)
 	I2C1CON = 1 << 15; // I2C ON
-	I2C1ADD = 1010000; // add EEPROM address to I2C1ADD register
-	int data = I2C1RCV; // clear receive buffer
+	I2C1ADD = 0b1010000; // add EEPROM address to I2C1ADD register
 
 	display_init();
 	display_string(0, "Score: ");

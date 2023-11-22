@@ -78,9 +78,9 @@ void eeprom_write_byte(uint16_t address, uint8_t data) {
     // Step 2: Send EEPROM device address with RW-bit 
     i2c_send(EEPROM_WRITE);
 
-    // Step 3: Send the memory address you want to write to
-    i2c_send((uint8_t)(address >> 8)); // MSB of address
-    i2c_send((uint8_t)(address & 0xFF)); // LSB of address
+    // Step 3: Send the memory address you want to write to, assuming 16 bit address (KOLLA PÅ DET HÄR)
+    i2c_send((uint8_t)(address >> 8)); // MSB of address (ÖVRE HALVAN)
+    i2c_send((uint8_t)(address & 0xFF)); // LSB of address (NEDRE HALVAN)
 
     // Step 4: Send the data to be written
     i2c_send(data);

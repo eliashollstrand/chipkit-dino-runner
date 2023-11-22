@@ -69,6 +69,8 @@ void update_display(void)
 
 	draw_obstacles();
 
+	draw_string(0, 0, "score: ");
+
 	// Update the display
 	display_objects();
 }

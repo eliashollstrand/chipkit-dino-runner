@@ -38,3 +38,6 @@ extern const uint8_t const font[128*8];
 extern const uint8_t const icon[128];
 /* Declare text buffer for display output */
 extern char textbuffer[4][16];
+
+// Declare an array of letters
+extern const uint8_t const letters[27][25];

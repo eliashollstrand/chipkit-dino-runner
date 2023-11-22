@@ -265,6 +265,41 @@ void display_objects(void) {
 	}
 }
 
+
+// draw a string of small letters
+void draw_char(int x, int y, char c)
+{
+	// array containing the bits of the character
+	int letter_number = c - 'a';
+		if (letter_number < 0)
+		{
+			letter_number = 26;
+		}
+
+	const uint8_t* data = letters[letter_number]; // Assuming 'letters' is a 2D array of characters
+
+	int i = 0;
+	for (; i < 25; i++)
+	{
+		// if the bit is 1, draw a pixel
+		if (data[i] == 1)
+		{
+			set_pixel(x + i % 5, y + i / 5);
+		}
+	}
+}
+
+// draw a string of small letters
+void draw_string(int x, int y, char* s)
+{
+	int i = 0;
+	for (; i < 16; i++)
+	{
+		draw_char(x + i * 6, y, s[i]);
+	}
+}
+  
+
 /*
  * itoa
  * 

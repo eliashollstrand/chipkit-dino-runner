@@ -40,4 +40,5 @@ extern const uint8_t const icon[128];
 extern char textbuffer[4][16];
 
 // Declare an array of letters
-extern const uint8_t const letters[27][25];
+extern const uint8_t const letters[28][25];
+

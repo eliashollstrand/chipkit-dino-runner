@@ -13,6 +13,9 @@ For copyright and licensing, see file COPYING
 #include <stdint.h>   /* Declarations of uint_32 and the like */
 #include <pic32mx.h>  /* Declarations of system-specific addresses etc */
 #include "declare.h"  /* Declatations for these labs */
+#include <stdio.h>
+#include <string.h>
+
 
 /* Declare a helper function which is local to this file */
 static void num32asc( char * s, int ); 
@@ -270,11 +273,14 @@ void display_objects(void) {
 void draw_char(int x, int y, char c)
 {
 	// array containing the bits of the character
-	int letter_number = c - 'a';
-		if (letter_number < 0)
-		{
-			letter_number = 26;
-		}
+	int letter_number;
+	if (c == 32) {
+		letter_number = 26; // Space
+	} else if (c == 58) {
+		letter_number = 27;
+	} else {
+		letter_number = c - 'a';
+	}
 
 	const uint8_t* data = letters[letter_number]; // Assuming 'letters' is a 2D array of characters
 
@@ -292,8 +298,10 @@ void draw_char(int x, int y, char c)
 // draw a string of small letters
 void draw_string(int x, int y, char* s)
 {
+	int STRLEN = 21;
+	
 	int i = 0;
-	for (; i < 16; i++)
+	for (; i < strlen(s); i++)
 	{
 		draw_char(x + i * 6, y, s[i]);
 	}

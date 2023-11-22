@@ -36,6 +36,8 @@ int obstacle_y = 31 - OBSTACLE_HEIGHT;
 int obstacle_width = OBSTACLE_SPAWN_WIDTH;
 int y_velocity = 0;
 
+int score = 0;
+
 void user_isr(void)
 {
 	if (IFS(0) & 0x100) // Timer 2 interrupt
@@ -85,6 +87,9 @@ void update_game(void)
 
 	// Move the obstacle
 	move_obstacle();
+
+	// Check for collisions
+	check_collision();
 }
 
 void draw_ground(void)
@@ -158,10 +163,23 @@ void move_obstacle()
 		{
 			obstacle_width = OBSTACLE_SPAWN_WIDTH;
 			obstacle_x = 127; // Reset the obstacle
+			score++;
 		}
 	}
 }
 
+void check_collision()
+{
+	// Check if the character is colliding with the obstacle
+	if (character_x + CHARACTER_WIDTH >= obstacle_x && character_x <= obstacle_x + obstacle_width)
+	{
+		if (character_y + character_height >= obstacle_y)
+		{
+			// respawn the obstacle
+			obstacle_x = 127;
+		}
+	}
+}
 int main(void)
 {
 	/* Set up timers, interrupts, input and outputs, display, I2C etc. */

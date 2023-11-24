@@ -2,6 +2,7 @@
 #include <pic32mx.h> /* Declarations of system-specific addresses etc */
 #include "declare.h" /* Declatations for these labs */
 
+const int FPS = 30;
 
 void chip_init(void)
 {
@@ -50,7 +51,7 @@ void chip_init(void)
 
     /* Set up timer */
     TMR2 = 0;                    // Reset timer counter
-    PR2 = (80000000 / 256) / 10; // Set period to 100ms
+    PR2 = (80000000 / 256) / FPS; // Set period to 100ms
     T2CON = 0x8070;              // Enable timer 2 (bit 15) and set prescaler to 1:256 (bit 6 and 7)
 
     // /* Set up interrupts for timer*/

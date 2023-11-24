@@ -20,17 +20,21 @@ For copyright and licensing, see file COPYING
 #define CHARACTER_DUCKING_HEIGHT 4
 #define OBSTACLE_SPAWN_WIDTH 5
 #define OBSTACLE_HEIGHT 10
-#define JUMP_VELOCITY -7
-#define GRAVITY 1
+#define JUMP_VELOCITY -5
+#define GRAVITY 0.5
+#define GROUND 31
+
+#define BTN4 4
+#define BTN3 2
 
 int character_x = 10;
-int character_y = 31 - CHARACTER_STANDING_HEIGHT;
+int character_y = GROUND - CHARACTER_STANDING_HEIGHT;
 int character_height = CHARACTER_STANDING_HEIGHT;
 int i = 0;
 int grass_x = GRASSX;
 int grass_x2 = GRASSX + 20;
-int obstacle_x = 127;
-int obstacle_y = 31 - OBSTACLE_HEIGHT;
+int obstacle_x = GRASSX;
+int obstacle_y = GROUND - OBSTACLE_HEIGHT;
 int obstacle_width = OBSTACLE_SPAWN_WIDTH;
 int y_velocity = 0;
 
@@ -123,25 +127,25 @@ void draw_character(void)
 void move_character()
 {
 	// check for button presses
-	if (getbtns() == 4 && character_y > 10 && y_velocity <= 0) // BTN4
+	if (getbtns() == BTN4 && character_y > 10 && y_velocity <= 0) // BTN4
 	{
 		y_velocity = JUMP_VELOCITY;
 	}
-	else if (getbtns() == 2 && character_y == 31 - character_height) // BTN3
+	else if (getbtns() == BTN3 && character_y == GROUND - character_height) // BTN3
 	{
 		character_height = CHARACTER_DUCKING_HEIGHT;
 		character_y = 31 - CHARACTER_DUCKING_HEIGHT;
 	}
-	else if (!(getbtns() == 2) && character_height == CHARACTER_DUCKING_HEIGHT)
+	else if (!(getbtns() == BTN3) && character_height == CHARACTER_DUCKING_HEIGHT)
 	{
 		character_height = CHARACTER_STANDING_HEIGHT;
 	}
 
 	// Update the character's y position
 	y_velocity += GRAVITY;
-	if (character_y + y_velocity > 31 - character_height) // 31 is the ground
+	if (character_y + y_velocity > GROUND - character_height) 
 	{
-		character_y = 31 - character_height;
+		character_y = GROUND - character_height;
 		y_velocity = 0;
 	}
 	else
@@ -162,7 +166,7 @@ void move_obstacle()
 		if (obstacle_width < 0)
 		{
 			obstacle_width = OBSTACLE_SPAWN_WIDTH;
-			obstacle_x = 127; // Reset the obstacle
+			obstacle_x = GRASSX; // Reset the obstacle
 			score++;
 		}
 	}
@@ -176,7 +180,7 @@ void check_collision()
 		if (character_y + character_height >= obstacle_y)
 		{
 			// respawn the obstacle
-			obstacle_x = 127;
+			obstacle_x = GRASSX;
 		}
 	}
 }

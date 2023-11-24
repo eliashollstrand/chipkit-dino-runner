@@ -64,14 +64,14 @@ void update_display(void)
 	draw_ground();
 
 	// Draw the grass
-	draw_grass();
+	// draw_grass();
 
 	// Draw the character
 	draw_character();
 
 	draw_obstacles();
 
-	draw_string(0, 0, "score: ");
+	draw_string(70, 0, "score: ");
 
 	// Update the display
 	display_objects();
@@ -101,18 +101,18 @@ void draw_ground(void)
 	fill_rectangle(0, 31, 128, 1);
 }
 
-void draw_grass(void)
-{
-	set_pixel(grass_x, 30);
-	set_pixel(grass_x, 29);
-	set_pixel(grass_x - 1, 28);
-	set_pixel(grass_x + 1, 28);
+// void draw_grass(void)
+// {
+// 	set_pixel(grass_x, 30);
+// 	set_pixel(grass_x, 29);
+// 	set_pixel(grass_x - 1, 28);
+// 	set_pixel(grass_x + 1, 28);
 
-	set_pixel(grass_x2, 30);
-	set_pixel(grass_x2, 29);
-	set_pixel(grass_x2 - 1, 28);
-	set_pixel(grass_x2 + 1, 28);
-}
+// 	set_pixel(grass_x2, 30);
+// 	set_pixel(grass_x2, 29);
+// 	set_pixel(grass_x2 - 1, 28);
+// 	set_pixel(grass_x2 + 1, 28);
+// }
 
 void draw_obstacles(void)
 {
@@ -130,6 +130,7 @@ void move_character()
 	if (getbtns() == BTN4 && character_y > 10 && y_velocity <= 0) // BTN4
 	{
 		y_velocity = JUMP_VELOCITY;
+		draw_string(0, 0, "here");
 	}
 	else if (getbtns() == BTN3 && character_y == GROUND - character_height) // BTN3
 	{
@@ -155,18 +156,16 @@ void move_character()
 }
 
 void move_obstacle()
-{
+{	
 	if (obstacle_x > 0){
 		obstacle_x--;
-	}
-	else if (obstacle_x <= 0)
+	} else
 	{
 		// Shrink the obstacle
 		obstacle_width--;
-		if (obstacle_width < 0)
-		{
-			obstacle_width = OBSTACLE_SPAWN_WIDTH;
+		if(obstacle_width <= 1) {
 			obstacle_x = GRASSX; // Reset the obstacle
+			obstacle_width = OBSTACLE_SPAWN_WIDTH;
 			score++;
 		}
 	}

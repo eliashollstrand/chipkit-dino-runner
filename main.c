@@ -20,10 +20,8 @@ For copyright and licensing, see file COPYING
 #define CHARACTER_DUCKING_HEIGHT 4
 #define OBSTACLE_SPAWN_WIDTH 5
 #define OBSTACLE_HEIGHT 10
-#define JUMP_VELOCITY -5
+#define JUMP_VELOCITY -7
 #define GRAVITY 1
-
-static int FPS = 10;
 
 int character_x = 10;
 int character_y = 31 - CHARACTER_STANDING_HEIGHT;

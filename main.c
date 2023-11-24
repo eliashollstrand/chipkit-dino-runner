@@ -19,6 +19,7 @@ For copyright and licensing, see file COPYING
 #define CHARACTER_STANDING_HEIGHT 10
 #define CHARACTER_DUCKING_HEIGHT 4
 #define OBSTACLE_SPAWN_WIDTH 5
+#define OBSTACLE_SPAWN_X 127
 #define OBSTACLE_HEIGHT 10
 #define JUMP_VELOCITY -5
 #define GRAVITY 0.5
@@ -33,7 +34,7 @@ int character_height = CHARACTER_STANDING_HEIGHT;
 int i = 0;
 int grass_x = GRASSX;
 int grass_x2 = GRASSX + 20;
-int obstacle_x = GRASSX;
+int obstacle_x = OBSTACLE_SPAWN_X;
 int obstacle_y = GROUND - OBSTACLE_HEIGHT;
 int obstacle_width = OBSTACLE_SPAWN_WIDTH;
 int y_velocity = 0;
@@ -71,7 +72,7 @@ void update_display(void)
 
 	draw_obstacles();
 
-	draw_string(70, 0, "score: ");
+	draw_string(60, 0, "score: ");
 
 	// Update the display
 	display_objects();

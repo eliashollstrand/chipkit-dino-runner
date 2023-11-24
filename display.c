@@ -301,9 +301,17 @@ void draw_string(int x, int y, char* s)
 	int STRLEN = 21;
 	
 	int i = 0;
-	for (; i < strlen(s); i++)
-	{
+	// for (; i < strlen(s); i++)
+	// {
+	// 	draw_char(x + i * 6, y, s[i]);
+	// }
+	// for (; i < STRLEN; i++)
+	// {
+	// 	draw_char(x + i * 6, y, s[i]);
+	// }
+	while(s[i]) {
 		draw_char(x + i * 6, y, s[i]);
+		i++;
 	}
 }
   

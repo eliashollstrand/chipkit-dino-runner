@@ -42,6 +42,7 @@ int obstacle_y = GROUND_Y - SMALL_OBSTACLE_HEIGHT;
 int obstacle_height = SMALL_OBSTACLE_HEIGHT;
 int obstacle_width = OBSTACLE_SPAWN_WIDTH;
 float y_velocity = 0;
+float speed = 1;
 
 int score = 0;
 int highscore;
@@ -145,7 +146,6 @@ void move_character()
 	if (getbtns() == BTN4 && character_y > 10 && y_velocity <= 0) // BTN4
 	{
 		y_velocity = JUMP_VELOCITY;
-		draw_string(0, 0, "here");
 	}
 	else if (getbtns() == BTN3 && character_y == GROUND_Y - character_height) // BTN3
 	{
@@ -192,17 +192,20 @@ void check_collision()
 // Returns a seemingly random integer between 0 and 3
 int random_int()
 {
-	return (TMR3%4);
+	int random = (TMR3 + score) % 4;
+	TMR3 = 0;
+	return (random);
 }
 
 void move_obstacle()
 {	
-	if (obstacle_x > 0){
-		obstacle_x--;
+	speed = 0.05f * score + 1.0;
+	if (obstacle_x > 0 && (obstacle_x-=speed > 0)){
+		obstacle_x-=speed;
 	} else
 	{
 		// Shrink the obstacle
-		obstacle_width--;
+		obstacle_width-=speed;
 		if(obstacle_width <= 1) {
 			spawn_obstacle();
 			score++;

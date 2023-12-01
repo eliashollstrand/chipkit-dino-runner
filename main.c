@@ -44,6 +44,7 @@ int obstacle_width = OBSTACLE_SPAWN_WIDTH;
 float y_velocity = 0;
 
 int score = 0;
+int highscore;
 
 void user_isr(void)
 {
@@ -78,6 +79,9 @@ void update_display(void)
 
 	draw_string(0, 0, "score: ");
 	draw_number(35, 0, score);
+
+	draw_string(80, 0, "hs: ");
+	draw_number(100, 0, highscore);
 
 	// Update the display
 	display_objects();
@@ -173,6 +177,11 @@ void check_collision()
 	{
 		if (obstacle_y + obstacle_height >= character_y && obstacle_y <= character_y + character_height) // Check if the character is in the y range of the obstacle
 		{
+			if (score > highscore)
+			{
+				highscore = score;
+				write_highscore(highscore);
+			}
 			spawn_obstacle();
 			score = 0;
 		}
@@ -237,6 +246,7 @@ int main(void)
 {
 	/* Set up timers, interrupts, input and outputs, display, I2C etc. */
 	chip_init();
+	highscore = read_highscore();
 
 	while (1)
 	{

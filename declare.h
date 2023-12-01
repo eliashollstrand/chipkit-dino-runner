@@ -42,3 +42,5 @@ extern char textbuffer[4][16];
 // Declare an array of letters
 extern const uint8_t const letters[28][25];
 
+// Declare an array of numbers
+extern const uint8_t const numbers[10][20];

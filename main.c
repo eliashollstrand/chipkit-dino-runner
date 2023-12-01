@@ -76,7 +76,8 @@ void update_display(void)
 
 	draw_obstacles();
 
-	draw_string(60, 0, "score: ");
+	draw_string(0, 0, "score: ");
+	draw_number(35, 0, score);
 
 	// Update the display
 	display_objects();
@@ -173,7 +174,7 @@ void check_collision()
 		if (obstacle_y + obstacle_height >= character_y && obstacle_y <= character_y + character_height) // Check if the character is in the y range of the obstacle
 		{
 			spawn_obstacle();
-			score++;
+			score = 0;
 		}
 
 	}

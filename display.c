@@ -304,7 +304,7 @@ void draw_string(int x, int y, char* s)
 		i++;
 	}
 }
-  
+ 
 
 /*
  * itoa
@@ -394,4 +394,33 @@ static void num32asc( char * s, int n )
   int i;
   for( i = 28; i >= 0; i -= 4 )
     *s++ = "0123456789ABCDEF"[ (n >> i) & 15 ];
+}
+
+
+// draw a digit
+void draw_digit(int x, int y, char n)
+{
+	int number = n - '0';
+	const uint8_t* data = numbers[number]; // Assuming 'numbers' is a 2D array of characters
+
+	int i = 0;
+	for (; i < 20; i++)
+	{
+		// if the bit is 1, draw a pixel
+		if (data[i] == 1)
+		{
+			set_pixel(x + i % 4, y + i / 4);
+		}
+	}
+}
+
+// draw a number
+void draw_number(int x, int y, int n)
+{
+	char *s = itoaconv(n);
+	int i = 0;
+	while(s[i]) {
+		draw_digit(x + i * 5, y, s[i]);
+		i++;
+	}
 }

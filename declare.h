@@ -61,3 +61,6 @@ extern int menu_page;
 // Declare function to change gamestate
 void change_state(GameState newState);
 
+// Declare leaderboard 
+extern uint8_t leaderboard[6];
+

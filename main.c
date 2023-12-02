@@ -105,14 +105,20 @@ void change_state(GameState newState)
 	}
 }
 
+const uint8_t const scores[4] = {1, 2, 3, 4};
+
 int main(void)
 {
 	/* Set up timers, interrupts, input and outputs, display, I2C etc. */
 	chip_init();
 	currentState = MENU_STATE;
+
+	// write_multiple_scores(scores);
+	// read_leaderboard();
+	write_highscore(10);
 	highscore = read_highscore();
 
-	// highscore = read_highscore();
+
 
 	while (1)
 	{

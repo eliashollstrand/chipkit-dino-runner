@@ -23,8 +23,7 @@ draw_menu()
         draw_string(0, 17, "duck: btn3");
         break;
     case 2:
-        draw_string(30, 3, "leaderboard");
-        draw_number(0, 10, highscore);
+        draw_leaderboard();
         break;
     case 3:
         draw_string(40, 3, "credits");

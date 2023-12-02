@@ -38,3 +38,26 @@ extern const uint8_t const font[128*8];
 extern const uint8_t const icon[128];
 /* Declare text buffer for display output */
 extern char textbuffer[4][16];
+
+// Declare an array of letters
+extern const uint8_t const letters[28][25];
+
+// Declare an array of numbers
+extern const uint8_t const numbers[10][20];
+
+// gamestates for the game
+typedef enum {
+    MENU_STATE,
+    GAME_STATE,
+    GAME_OVER_STATE
+} GameState;
+
+// Declare global variables for the game
+extern int highscore;
+extern int score;
+
+extern int menu_page;
+
+// Declare function to change gamestate
+void change_state(GameState newState);
+

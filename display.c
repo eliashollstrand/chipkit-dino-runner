@@ -13,6 +13,9 @@ For copyright and licensing, see file COPYING
 #include <stdint.h>   /* Declarations of uint_32 and the like */
 #include <pic32mx.h>  /* Declarations of system-specific addresses etc */
 #include "declare.h"  /* Declatations for these labs */
+#include <stdio.h>
+#include <string.h>
+
 
 /* Declare a helper function which is local to this file */
 static void num32asc( char * s, int ); 
@@ -151,9 +154,169 @@ void display_update(void) {
 			
 			for(k = 0; k < 8; k++)
 				spi_send_recv(font[c*8 + k]);
+		} // skicka in delar av arrayen här
+	}
+}
+
+// array for pixel data
+uint8_t pixel_data[4][128];
+
+//set pixel at position x,y
+void set_pixel(int x, int y)
+{
+	int row = y / 8; // 8 pixels per row
+	int col = x; // 128 pixels per column
+	pixel_data[row][col] |= 1 << (y % 8); // set bit at position y%8
+}
+
+// clear pixel at position x,y
+void clear_pixel(int x, int y)
+{
+	int row = y / 8; // 8 pixels per row
+	int col = x; // 128 pixels per column
+	pixel_data[row][col] &= ~(1 << (y % 8)); // clear bit at position y%8
+}
+
+// check if pixel at position x,y is set
+int pixel_is_set(int x, int y)
+{
+	int row = y / 8; // 8 pixels per row
+	int col = x; // 128 pixels per column
+	return pixel_data[row][col] & (1 << (y % 8)); // check if bit at position y%8 is set
+}
+
+// clear all pixels
+void clear_all_pixels()
+{
+	int i, j;
+	for (i = 0; i < 4; i++)
+	{
+		for (j = 0; j < 128; j++)
+		{
+			pixel_data[i][j] = 0;
 		}
 	}
 }
+
+// draw a line from x0,y0 to x1,y1
+// void draw_line(int x0, int y0, int x1, int y1)
+// {
+// 	int dx = abs(x1 - x0), sx = x0 < x1 ? 1 : -1;
+// 	int dy = abs(y1 - y0), sy = y0 < y1 ? 1 : -1;
+// 	int err = (dx > dy ? dx : -dy) / 2, e2;
+
+// 	for (;;)
+// 	{
+// 		set_pixel(x0, y0);
+// 		if (x0 == x1 && y0 == y1)
+// 			break;
+// 		e2 = err;
+// 		if (e2 > -dx)
+// 		{
+// 			err -= dy;
+// 			x0 += sx;
+// 		}
+// 		if (e2 < dy)
+// 		{
+// 			err += dx;
+// 			y0 += sy;
+// 		}
+// 	}
+// }
+
+// draw a rectangle from x0,y0 with width w and height h
+// void draw_rectangle(int x0, int y0, int w, int h)
+// {
+// 	int x1 = x0 + w;
+// 	int y1 = y0 + h;
+// 	draw_line(x0, y0, x1, y0);
+// 	draw_line(x0, y0, x0, y1);
+// 	draw_line(x1, y0, x1, y1);
+// 	draw_line(x0, y1, x1, y1);
+// }
+
+void fill_rectangle(int x0, int y0, int w, int h)
+{
+	int x1 = x0 + w;
+	int y1 = y0 + h;
+	int i, j;
+	for (i = x0; i < x1; i++)
+	{
+		for (j = y0; j < y1; j++)
+		{
+			set_pixel(i, j);
+		}
+	}
+}
+
+void display_objects(void) {
+	int i, j, k;
+	int c;
+	for(i = 0; i < 4; i++) {
+		DISPLAY_CHANGE_TO_COMMAND_MODE;
+		spi_send_recv(0x22);
+		spi_send_recv(i);
+		
+		spi_send_recv(0x0);
+		spi_send_recv(0x10);
+		
+		DISPLAY_CHANGE_TO_DATA_MODE;
+		
+		for(j = 0; j < 128; j++) {
+			spi_send_recv(pixel_data[i][j]);
+		} // skicka in delar av arrayen här
+	}
+}
+
+
+// draw a character
+void draw_char(int x, int y, char c)
+{
+	// array containing the bits of the character
+	int char_number;
+	if (c == 32) {
+		char_number = 26; // Space
+	} else if (c == 58) {
+		char_number = 27; // Colon
+	} else {
+		char_number = c - 'a';
+	}
+	const uint8_t* data = letters[char_number]; // Assuming 'letters' is a 2D array of characters
+
+	if (48 <= c && c <= 57) { // Numbers
+		char_number = c - '0';
+		data = numbers[char_number];
+
+		int i = 0;
+		for (; i < 20; i++)
+		{
+			// if the bit is 1, draw a pixel
+			if (data[i] == 1)
+			{
+				set_pixel(x + i % 4, y + i / 4);
+			}
+		}
+	} else {
+		int i = 0;
+		for (; i < 25; i++) {
+		// if the bit is 1, draw a pixel
+			if (data[i] == 1) {
+				set_pixel(x + i % 5, y + i / 5);
+			}
+		}
+	}
+}
+
+// draw a string of small letters
+void draw_string(int x, int y, char* s)
+{	
+	int i = 0;
+	while(s[i]) {
+		draw_char(x + i * 6, y, s[i]);
+		i++;
+	}
+}
+ 
 
 /*
  * itoa
@@ -243,4 +406,33 @@ static void num32asc( char * s, int n )
   int i;
   for( i = 28; i >= 0; i -= 4 )
     *s++ = "0123456789ABCDEF"[ (n >> i) & 15 ];
+}
+
+
+// draw a digit
+void draw_digit(int x, int y, char n)
+{
+	int number = n - '0';
+	const uint8_t* data = numbers[number]; // Assuming 'numbers' is a 2D array of characters
+
+	int i = 0;
+	for (; i < 20; i++)
+	{
+		// if the bit is 1, draw a pixel
+		if (data[i] == 1)
+		{
+			set_pixel(x + i % 4, y + i / 4);
+		}
+	}
+}
+
+// draw a number
+void draw_number(int x, int y, int n)
+{
+	char *s = itoaconv(n);
+	int i = 0;
+	while(s[i]) {
+		draw_digit(x + i * 5, y, s[i]);
+		i++;
+	}
 }

@@ -1,23 +1,23 @@
-/*
-Authors:
-Elias Hollstrand,
-Mattias Kvist
+// // /*
+// // Authors:
+// // Elias Hollstrand,
+// // Mattias Kvist
 
-Date: TODO
-TTYDEV=/dev/cu.usbserial-A503WFGV
+// // Date: TODO
+// // TTYDEV=/dev/cu.usbserial-A503WFGV
 
-For copyright and licensing, see file COPYING
-*/
+// // For copyright and licensing, see file COPYING
+// // */
 
 #include <stdio.h>
 #include <stdint.h>
 #include <stdlib.h>
 #include <pic32mx.h>
 
-uint8_t highscore;
-uint8_t score;
+
 int ledValue = 0;
 
+// volatile int *porte = (volatile int *)0xbf886110;
 /* Initialize LEDs*/
 volatile int *porte = (volatile int *)0xbf886110;
 volatile int *trise = (volatile int *)0xbf886100;
@@ -27,19 +27,27 @@ volatile int *trise = (volatile int *)0xbf886100;
 #define SCORE_ADDRESS 0x0230
 #define I2C_DELAY 500000 // Delay to allow the EEPROM to complete the write operation, experiment more
 
-// uint8_t current_address_read() {
-//     uint8_t data = 0;
-//     i2c_start();
-//     i2c_send(EEPROM_READ);
+// // uint8_t current_address_read() {
+// //     uint8_t data = 0;
+// //     i2c_start();
+// //     i2c_send(EEPROM_READ);
 
-//     data = i2c_recv();
+// //     data = i2c_recv();
 
-//     // Send NACK to EEPROM
-//     i2c_nack();
+// //     // Send NACK to EEPROM
+// //     i2c_nack();
 
-//     i2c_stop();
-//     return data;
-// }
+// //     i2c_stop();
+// //     return data;
+// // }
+
+/* Function used to delay operations */
+void delay(int cyc)
+{
+    int i;
+    for (i = cyc; i > 0; i--)
+        ;
+}
 
 uint8_t eeprom_read_byte(uint16_t address) {
     // Step 1: Send start condition
@@ -92,91 +100,6 @@ void eeprom_write_byte(uint16_t address, uint8_t data) {
     delay(I2C_DELAY); // Delay to allow the EEPROM to complete the write operation, can display 255 without delay if read too quickly
 }
 
-/* Function used to delay operations */
-void delay(int cyc)
-{
-    int i;
-    for (i = cyc; i > 0; i--)
-        ;
-}
-
-void score_display()
-{
-    display_string(0, "Score: ");
-    display_string(1, itoaconv(score));
-
-    display_string(3, itoaconv(highscore));
-    display_update();
-}
-
-void score_update()
-{
-    score++;
-    if (score > highscore)
-    {
-        // highscore = score;
-        eeprom_write_byte(SCORE_ADDRESS, score);
-
-    }
-    score_display();
-}
-
-/* Interrupt Service Routine */
-void user_isr(void)
-{
-    if (IFS(1) & 0x1) // button 4, update score
-    {
-        score_update();
-        IFSCLR(1) = 0x1;
-    }
-
-    if (IFS(0) & 0x80000) // switch 4, update led+=1 and write ledvalue to EEPROM
-    {
-        IFSCLR(0) = 0x80000;
-        increment_LEDs();
-
-        eeprom_write_byte(SCORE_ADDRESS, ledValue);
-        display_string(0, "Wrote to EEPROM");
-        display_string(1, itoaconv(ledValue));
-        display_update();
-    }
-
-    if (IFS(0) & 0x8000) // switch 3, read from EEPROM
-    {
-        IFSCLR(0) = 0x8000;
-
-        highscore = eeprom_read_byte(SCORE_ADDRESS);
-        display_string(0, "Read from EEPROM");
-        display_string(3, itoaconv(highscore));
-        display_update();
-    }
-
-    if (IFS(0) & 0x800) // switch 2
-    {
-        IFSCLR(0) = 0x800;
-        increment_LEDs();
-    }
-
-
-    if (IFS(0) & 0x80) // switch 1, update led and update display
-    {
-        IFSCLR(0) = 0x80;
-        increment_LEDs();
-    }
-}
-
-void score_init()
-{
-
-    // Display string to indicate that the highscore is stored in EEPROM
-	display_string(2, "Score in EEPROM: ");
-
-    // Get the high score from EEPROM and store in highscore variable
-    highscore = eeprom_read_byte(SCORE_ADDRESS);
-
-    // Display score and current highscore
-    score_display();
-}
 
 void increment_LEDs()
 {
@@ -185,4 +108,14 @@ void increment_LEDs()
 
     // Update the LEDs
     *porte = ledValue;
+}
+
+uint8_t read_highscore()
+{
+    return eeprom_read_byte(SCORE_ADDRESS);
+}
+
+void write_highscore(uint8_t score)
+{
+    eeprom_write_byte(SCORE_ADDRESS, score);
 }

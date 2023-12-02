@@ -163,11 +163,7 @@ void check_collision()
 	{
 		if (obstacle_y + obstacle_height >= character_y && obstacle_y <= character_y + character_height) // Check if the character is in the y range of the obstacle
 		{
-			if (score > highscore)
-			{
-				highscore = score;
-				write_highscore(highscore);
-			}
+			insert_score(score);
 			change_state(GAME_OVER_STATE);
 		}
 

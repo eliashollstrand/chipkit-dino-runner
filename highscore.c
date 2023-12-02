@@ -13,9 +13,12 @@
 #include <stdint.h>
 #include <stdlib.h>
 #include <pic32mx.h>
+#include "declare.h"
 
 
 int ledValue = 0;
+uint8_t leaderboard_scores[NUM_LEADERBOARD_ENTRIES] = {1, 2, 3, 4, 5, 6};
+
 
 // volatile int *porte = (volatile int *)0xbf886110;
 /* Initialize LEDs*/
@@ -180,17 +183,15 @@ void read_multiple_scores(uint8_t *scores, int size)
     i2c_stop();
 }
 
-uint8_t leaderboard_scores[6] = {1, 2, 3, 4, 5, 6};
-
 void read_leaderboard()
 {
-    read_multiple_scores(leaderboard_scores, 6);
+    read_multiple_scores(leaderboard_scores, NUM_LEADERBOARD_ENTRIES);
 }
 
 void print_leaderboard()
 {
     int i = 0;
-    while (i < 6) {
+    while (i < NUM_LEADERBOARD_ENTRIES) {
         draw_number(i*17, 10, leaderboard_scores[i]);
         i++;
     }
@@ -202,4 +203,23 @@ void draw_leaderboard()
     draw_string(30, 3, "leaderboard");
     print_leaderboard();
     display_objects();
+}
+
+void insert_score(uint8_t score)
+{
+    int i = 0;
+    while (i < NUM_LEADERBOARD_ENTRIES) {
+        if (score > leaderboard_scores[i]) {
+            // Shift down all scores below this one
+            int j;
+            for (j = NUM_LEADERBOARD_ENTRIES - 1; j > i; j--) {
+                leaderboard_scores[j] = leaderboard_scores[j - 1];
+            }
+            // Insert the new score
+            leaderboard_scores[i] = score;
+            write_multiple_scores(leaderboard_scores);
+            break;
+        }
+        i++;
+    }
 }

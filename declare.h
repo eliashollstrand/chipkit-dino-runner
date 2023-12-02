@@ -64,3 +64,4 @@ void change_state(GameState newState);
 // Declare leaderboard 
 extern uint8_t leaderboard[6];
 
+#define NUM_LEADERBOARD_ENTRIES 6

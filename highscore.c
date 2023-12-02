@@ -136,7 +136,6 @@ void write_multiple_scores(uint8_t *scores)
     int i = 0;
     while (scores[i] != 0) {
         i2c_send(scores[i]);
-        delay(I2C_DELAY);
         scores++;
     }
 
@@ -167,13 +166,14 @@ void read_multiple_scores(uint8_t *scores, int size)
 
     // Step 6: Receive the data from the EEPROM
     int i = 0;
-    while (i < size) {
+    while (i < size - 1) {
         scores[i] = i2c_recv();
         i2c_ack();
         i++;
     }
 
-    // Step 7: Send NACK to indicate the end of read
+    // Receive the last data byte from the EEPROM
+    scores[i] = i2c_recv();
     i2c_nack();
 
     // Step 8: Send stop condition

@@ -105,7 +105,7 @@ void change_state(GameState newState)
 	}
 }
 
-const uint8_t const scores[4] = {1, 2, 3, 4};
+const uint8_t const scores[6] = {10, 2, 3, 4, 5, 6};
 
 int main(void)
 {
@@ -113,10 +113,10 @@ int main(void)
 	chip_init();
 	currentState = MENU_STATE;
 
-	// write_multiple_scores(scores);
-	// read_leaderboard();
-	write_highscore(10);
 	highscore = read_highscore();
+	write_multiple_scores(scores);
+	read_leaderboard();
+
 
 
 

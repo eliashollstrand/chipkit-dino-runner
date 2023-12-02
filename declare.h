@@ -44,3 +44,20 @@ extern const uint8_t const letters[28][25];
 
 // Declare an array of numbers
 extern const uint8_t const numbers[10][20];
+
+// gamestates for the game
+typedef enum {
+    MENU_STATE,
+    GAME_STATE,
+    GAME_OVER_STATE
+} GameState;
+
+// Declare global variables for the game
+extern int highscore;
+extern int score;
+
+extern int menu_page;
+
+// Declare function to change gamestate
+void change_state(GameState newState);
+

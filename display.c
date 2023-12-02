@@ -273,24 +273,36 @@ void display_objects(void) {
 void draw_char(int x, int y, char c)
 {
 	// array containing the bits of the character
-	int letter_number;
+	int char_number;
 	if (c == 32) {
-		letter_number = 26; // Space
+		char_number = 26; // Space
 	} else if (c == 58) {
-		letter_number = 27;
+		char_number = 27; // Colon
 	} else {
-		letter_number = c - 'a';
+		char_number = c - 'a';
 	}
+	const uint8_t* data = letters[char_number]; // Assuming 'letters' is a 2D array of characters
 
-	const uint8_t* data = letters[letter_number]; // Assuming 'letters' is a 2D array of characters
+	if (48 <= c && c <= 57) { // Numbers
+		char_number = c - '0';
+		data = numbers[char_number];
 
-	int i = 0;
-	for (; i < 25; i++)
-	{
-		// if the bit is 1, draw a pixel
-		if (data[i] == 1)
+		int i = 0;
+		for (; i < 20; i++)
 		{
-			set_pixel(x + i % 5, y + i / 5);
+			// if the bit is 1, draw a pixel
+			if (data[i] == 1)
+			{
+				set_pixel(x + i % 4, y + i / 4);
+			}
+		}
+	} else {
+		int i = 0;
+		for (; i < 25; i++) {
+		// if the bit is 1, draw a pixel
+			if (data[i] == 1) {
+				set_pixel(x + i % 5, y + i / 5);
+			}
 		}
 	}
 }

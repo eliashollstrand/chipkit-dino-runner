@@ -15,35 +15,43 @@ For copyright and licensing, see file COPYING
 #include "declare.h" /* Declatations for these labs */
 
 GameState currentState;
+int delay_counter;
 
 check_for_input()
 {
-	switch (currentState)
+	if (delay_counter >= 4)
 	{
-	case MENU_STATE:
-		if (getbtns() & 0x4)
+		switch (currentState)
 		{
-			change_state(GAME_STATE);
-		}
-		else if (getbtns() & 0x1)
-		{
-			menu_page++;
-		}
-		break;
-	
-	case GAME_OVER_STATE:
-		if (getbtns() & 0x4)
-		{
-			change_state(GAME_STATE);
-		}
-		else if (getbtns() & 0x1)
-		{
-			change_state(MENU_STATE);
-		}
-		break;
+		case MENU_STATE:
+			if (getbtns() & 0x4)
+			{
+				change_state(GAME_STATE);
+			}
+			else if (getbtns() & 0x1)
+			{
+				menu_page++;
+			}
 
-	default:
-		break;
+			delay_counter = 0;
+			break;
+
+		case GAME_OVER_STATE:
+			if (getbtns() & 0x4)
+			{
+				change_state(GAME_STATE);
+			}
+			else if (getbtns() & 0x1)
+			{
+				change_state(MENU_STATE);
+			}
+
+			delay_counter = 0;
+			break;
+
+		default:
+			break;
+		}
 	}
 }
 
@@ -53,6 +61,7 @@ void user_isr(void)
 	{
 		// Clear the interrupt flag
 		IFSCLR(0) = 0x100;
+		delay_counter++;
 
 		switch (currentState)
 		{
@@ -83,6 +92,7 @@ void user_isr(void)
 void change_state(GameState newState)
 {
 	currentState = newState;
+	delay_counter = 0;
 	switch (currentState)
 	{
 	case GAME_STATE:

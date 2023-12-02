@@ -13,9 +13,9 @@ draw_menu()
     switch (menu_page%4)
     {
     case 0:
-        draw_string(20, 3, "menu controls");
-        draw_string(0, 10, "btn4 to start");
-        draw_string(0, 17, "btn2 to change page");
+        draw_string(25, 3, "menu controls");
+        draw_string(0, 10, "start: btn4");
+        draw_string(0, 17, "next: btn2");
         break;
     case 1:
         draw_string(40, 3, "controls");
@@ -23,14 +23,15 @@ draw_menu()
         draw_string(0, 17, "duck: btn3");
         break;
     case 2:
+        draw_string(30, 3, "leaderboard");
+        draw_number(0, 10, highscore);
+        break;
+    case 3:
         draw_string(40, 3, "credits");
         draw_string(0, 10, "mattias kvist");
         draw_string(0, 17, "elias hollstrand");
         break;
-    case 3:
-        draw_string(40, 3, "highscore");
-        draw_number(0, 10, highscore);
-        break;
+
     default:
         break;
     }

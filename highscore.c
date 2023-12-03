@@ -218,6 +218,7 @@ void insert_score(uint8_t score)
             // Insert the new score
             leaderboard_scores[i] = score;
             write_multiple_scores(leaderboard_scores);
+            highscore = read_highscore();
             break;
         }
         i++;

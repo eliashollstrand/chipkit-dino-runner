@@ -27,9 +27,10 @@ For copyright and licensing, see file COPYING
 #define GROUND_Y 31
 #define MID_AIR_Y 25
 #define HIGH_AIR_Y 20
-#define DINO_WIDTH 13
+#define DINO_STANDING_WIDTH 13
 #define DINO_STANDING_HEIGHT 15
-#define DINO_DUCKING_HEIGHT 6
+#define DINO_DUCKING_HEIGHT 10
+#define DINO_DUCKING_WIDTH 20
 
 #define BTN4 4
 #define BTN3 2
@@ -37,6 +38,7 @@ For copyright and licensing, see file COPYING
 int character_x;
 float character_y;
 int character_height;
+int character_width;
 int i;
 int grass_x;
 int grass_x2;
@@ -49,6 +51,8 @@ float speed;
 
 int score;
 int highscore;
+
+characterAction action;
 
 
 void update_display(void)
@@ -126,8 +130,21 @@ void draw_obstacles(void)
 
 void draw_character(void)
 {
-	draw_image(character_x, (int)character_y, DINO_WIDTH, DINO_STANDING_HEIGHT, dino);
-	// fill_rectangle(character_x, (int)character_y, CHARACTER_WIDTH, character_height);
+	uint8_t *image;
+	switch (action)
+	{
+	case RUNNING:
+		image = dino;
+		break;
+
+	case DUCKING:
+		image = dino_ducking;
+		break;
+	
+	default:
+		break;
+	}
+	draw_image(character_x, (int)character_y, character_width, character_height, image);
 }
 
 void move_character()
@@ -136,15 +153,20 @@ void move_character()
 	if (getbtns() == BTN4 && character_y > 10 && y_velocity <= 0) // BTN4
 	{
 		y_velocity = JUMP_VELOCITY;
+		action = RUNNING;
 	}
 	else if (getbtns() == BTN3 && character_y == GROUND_Y - character_height) // BTN3
 	{
 		character_height = DINO_DUCKING_HEIGHT;
+		character_width = DINO_DUCKING_WIDTH;
 		character_y = 31 - DINO_DUCKING_HEIGHT;
+		action = DUCKING;
 	}
 	else if (!(getbtns() == BTN3) && character_height == DINO_DUCKING_HEIGHT)
 	{
 		character_height = DINO_STANDING_HEIGHT;
+		character_width = DINO_STANDING_WIDTH;
+		action = RUNNING;
 	}
 
 	// Update the character's y position
@@ -163,7 +185,7 @@ void move_character()
 void check_collision()
 {
 	// Check if the character is colliding with the obstacle
-	if (character_x + DINO_WIDTH >= obstacle_x && character_x <= obstacle_x + obstacle_width) // Check if the character is in the x range of the obstacle
+	if (character_x + character_width >= obstacle_x && character_x <= obstacle_x + obstacle_width) // Check if the character is in the x range of the obstacle
 	{
 		if (obstacle_y + obstacle_height >= character_y && obstacle_y <= character_y + character_height) // Check if the character is in the y range of the obstacle
 		{
@@ -235,6 +257,7 @@ void reset_game(void)
     character_x = 10;
     character_y = GROUND_Y - DINO_STANDING_HEIGHT;
     character_height = DINO_STANDING_HEIGHT;
+	character_width = DINO_STANDING_WIDTH;
     i = 0;
     grass_x = GRASSX;
     grass_x2 = GRASSX + 20;
@@ -245,4 +268,5 @@ void reset_game(void)
     y_velocity = 0;
     speed = 1;
     score = 0;
+	action = RUNNING;
 }

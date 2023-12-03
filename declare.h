@@ -44,6 +44,7 @@ extern const uint8_t const letters[28][25];
 
 // Declare an array containing dino character
 extern const uint8_t const dino[13][15];
+extern const uint8_t const dino_ducking[20][10];
 
 // Declare an array of numbers
 extern const uint8_t const numbers[10][20];
@@ -54,6 +55,11 @@ typedef enum {
     GAME_STATE,
     GAME_OVER_STATE
 } GameState;
+
+typedef enum {
+    RUNNING, 
+    DUCKING
+} characterAction;
 
 // Declare global variables for the game
 extern int highscore;

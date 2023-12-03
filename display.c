@@ -436,3 +436,15 @@ void draw_number(int x, int y, int n)
 		i++;
 	}
 }
+
+void draw_image(int x, int y, int width, int height, const uint8_t *data) {
+	int i = 0;
+
+	for (; i < width * height; i++)
+	{
+		if (data[i] == 1)
+		{
+			set_pixel(x + i % width, y + i / width);
+		}
+	}
+}

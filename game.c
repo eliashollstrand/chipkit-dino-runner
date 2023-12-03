@@ -15,9 +15,9 @@ For copyright and licensing, see file COPYING
 #include "declare.h" /* Declatations for these labs */
 
 #define GRASSX 127
-#define CHARACTER_WIDTH 5
-#define CHARACTER_STANDING_HEIGHT 10
-#define CHARACTER_DUCKING_HEIGHT 4
+#define CHARACTER_WIDTH 5 // TODO
+#define CHARACTER_STANDING_HEIGHT 10 // TODO
+#define CHARACTER_DUCKING_HEIGHT 4 // TODO
 #define OBSTACLE_SPAWN_WIDTH 5
 #define OBSTACLE_SPAWN_X 127
 #define BIG_OBSTACLE_HEIGHT 10
@@ -27,6 +27,8 @@ For copyright and licensing, see file COPYING
 #define GROUND_Y 31
 #define MID_AIR_Y 25
 #define HIGH_AIR_Y 20
+#define DINO_WIDTH 13
+#define DINO_HEIGHT 15
 
 #define BTN4 4
 #define BTN3 2
@@ -123,7 +125,8 @@ void draw_obstacles(void)
 
 void draw_character(void)
 {
-	fill_rectangle(character_x, (int)character_y, CHARACTER_WIDTH, character_height);
+	draw_image(character_x, (int)character_y, DINO_WIDTH, DINO_HEIGHT, dino);
+	// fill_rectangle(character_x, (int)character_y, CHARACTER_WIDTH, character_height);
 }
 
 void move_character()

@@ -50,6 +50,9 @@ extern const uint8_t const dino_ducking[20][10];
 extern const uint8_t const cactus_small[6][11];
 extern const uint8_t const cactus_big[8][14];
 
+// Declare array containing bird
+extern const uint8_t const bird[12][6];
+
 // Declare an array of numbers
 extern const uint8_t const numbers[10][20];
 

@@ -19,13 +19,15 @@ For copyright and licensing, see file COPYING
 // #define CHARACTER_STANDING_HEIGHT 10 
 // #define DINO_DUCKING_HEIGHT 4 
 #define OBSTACLE_SPAWN_X 127
-#define OBSTACLE_SPAWN_WIDTH 5
+// #define OBSTACLE_SPAWN_WIDTH 5
 #define BIG_OBSTACLE_HEIGHT 10
 #define SMALL_OBSTACLE_HEIGHT 5
 #define SMALL_CACTUS_WIDTH 6
 #define SMALL_CACTUS_HEIGHT 11
 #define BIG_CACTUS_WIDTH 8
 #define BIG_CACTUS_HEIGHT 14
+#define BIRD_WIDTH 12
+#define BIRD_HEIGHT 6
 #define JUMP_VELOCITY -4
 #define GRAVITY 0.5f
 #define GROUND_Y 31
@@ -203,8 +205,7 @@ void check_collision()
 // Returns a seemingly random integer between 0 and 3
 int random_int()
 {
-	// int random = (TMR3 + score) % 4;
-	int random = (TMR3 + score) % 2;
+	int random = (TMR3 + score) % 4;
 	TMR3 = 0;
 	return (random);
 }
@@ -243,17 +244,19 @@ void spawn_obstacle()
 		obstacle_width = BIG_CACTUS_WIDTH;
 		break;
 	
-	// case 2: // Spawn a small obstacle in the middle
-	// 	obstacle_y = MID_AIR_Y - SMALL_OBSTACLE_HEIGHT;
-	// 	obstacle_height = SMALL_OBSTACLE_HEIGHT;
-	// 	obstacle_width = SMALL_OBSTACLE_HEIGHT;
-	// 	break;	
+	case 2: // Spawn a bird at low height
+		obstacle = bird;
+		obstacle_y = MID_AIR_Y - BIRD_HEIGHT;
+		obstacle_height = BIRD_HEIGHT;
+		obstacle_width = BIRD_WIDTH;
+		break;	
 
-	// case 3: // Spawn a small obstacle in the air
-	// 	obstacle_y = HIGH_AIR_Y - SMALL_OBSTACLE_HEIGHT;
-	// 	obstacle_height = SMALL_OBSTACLE_HEIGHT;
-	// 	obstacle_width = SMALL_OBSTACLE_HEIGHT;
-	// 	break;
+	case 3: // Spawn a bird at high height
+		obstacle = bird;
+		obstacle_y = HIGH_AIR_Y - BIRD_HEIGHT;
+		obstacle_height = BIRD_HEIGHT;
+		obstacle_width = BIRD_WIDTH;
+		break;
 
 	default:
 		break;

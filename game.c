@@ -15,9 +15,9 @@ For copyright and licensing, see file COPYING
 #include "declare.h" /* Declatations for these labs */
 
 #define GRASSX 127
-#define CHARACTER_WIDTH 5 // TODO
-#define CHARACTER_STANDING_HEIGHT 10 // TODO
-#define CHARACTER_DUCKING_HEIGHT 4 // TODO
+// #define CHARACTER_WIDTH 5 
+// #define CHARACTER_STANDING_HEIGHT 10 
+// #define DINO_DUCKING_HEIGHT 4 
 #define OBSTACLE_SPAWN_WIDTH 5
 #define OBSTACLE_SPAWN_X 127
 #define BIG_OBSTACLE_HEIGHT 10
@@ -28,7 +28,8 @@ For copyright and licensing, see file COPYING
 #define MID_AIR_Y 25
 #define HIGH_AIR_Y 20
 #define DINO_WIDTH 13
-#define DINO_HEIGHT 15
+#define DINO_STANDING_HEIGHT 15
+#define DINO_DUCKING_HEIGHT 6
 
 #define BTN4 4
 #define BTN3 2
@@ -125,7 +126,7 @@ void draw_obstacles(void)
 
 void draw_character(void)
 {
-	draw_image(character_x, (int)character_y, DINO_WIDTH, DINO_HEIGHT, dino);
+	draw_image(character_x, (int)character_y, DINO_WIDTH, DINO_STANDING_HEIGHT, dino);
 	// fill_rectangle(character_x, (int)character_y, CHARACTER_WIDTH, character_height);
 }
 
@@ -138,12 +139,12 @@ void move_character()
 	}
 	else if (getbtns() == BTN3 && character_y == GROUND_Y - character_height) // BTN3
 	{
-		character_height = CHARACTER_DUCKING_HEIGHT;
-		character_y = 31 - CHARACTER_DUCKING_HEIGHT;
+		character_height = DINO_DUCKING_HEIGHT;
+		character_y = 31 - DINO_DUCKING_HEIGHT;
 	}
-	else if (!(getbtns() == BTN3) && character_height == CHARACTER_DUCKING_HEIGHT)
+	else if (!(getbtns() == BTN3) && character_height == DINO_DUCKING_HEIGHT)
 	{
-		character_height = CHARACTER_STANDING_HEIGHT;
+		character_height = DINO_STANDING_HEIGHT;
 	}
 
 	// Update the character's y position
@@ -162,7 +163,7 @@ void move_character()
 void check_collision()
 {
 	// Check if the character is colliding with the obstacle
-	if (character_x + CHARACTER_WIDTH >= obstacle_x && character_x <= obstacle_x + obstacle_width) // Check if the character is in the x range of the obstacle
+	if (character_x + DINO_WIDTH >= obstacle_x && character_x <= obstacle_x + obstacle_width) // Check if the character is in the x range of the obstacle
 	{
 		if (obstacle_y + obstacle_height >= character_y && obstacle_y <= character_y + character_height) // Check if the character is in the y range of the obstacle
 		{
@@ -232,8 +233,8 @@ void spawn_obstacle()
 void reset_game(void)
 {
     character_x = 10;
-    character_y = GROUND_Y - CHARACTER_STANDING_HEIGHT;
-    character_height = CHARACTER_STANDING_HEIGHT;
+    character_y = GROUND_Y - DINO_STANDING_HEIGHT;
+    character_height = DINO_STANDING_HEIGHT;
     i = 0;
     grass_x = GRASSX;
     grass_x2 = GRASSX + 20;

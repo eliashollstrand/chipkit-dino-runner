@@ -18,10 +18,14 @@ For copyright and licensing, see file COPYING
 // #define CHARACTER_WIDTH 5 
 // #define CHARACTER_STANDING_HEIGHT 10 
 // #define DINO_DUCKING_HEIGHT 4 
-#define OBSTACLE_SPAWN_WIDTH 5
 #define OBSTACLE_SPAWN_X 127
+#define OBSTACLE_SPAWN_WIDTH 5
 #define BIG_OBSTACLE_HEIGHT 10
 #define SMALL_OBSTACLE_HEIGHT 5
+#define SMALL_CACTUS_WIDTH 6
+#define SMALL_CACTUS_HEIGHT 11
+#define BIG_CACTUS_WIDTH 8
+#define BIG_CACTUS_HEIGHT 14
 #define JUMP_VELOCITY -4
 #define GRAVITY 0.5f
 #define GROUND_Y 31
@@ -53,7 +57,7 @@ int score;
 int highscore;
 
 characterAction action;
-
+uint8_t *obstacle;
 
 void update_display(void)
 {
@@ -97,7 +101,7 @@ void update_game(void)
 	move_obstacle();
 
 	// Check for collisions
-	check_collision();
+	// check_collision();
 }
 
 void draw_ground(void)
@@ -125,7 +129,7 @@ void draw_obstacles(void)
 	{
 		width = 128 - obstacle_x;
 	}
-	fill_rectangle(obstacle_x, obstacle_y, width, obstacle_height);
+	draw_image(obstacle_x, obstacle_y, width, obstacle_height, obstacle);
 }
 
 void draw_character(void)
@@ -199,7 +203,8 @@ void check_collision()
 // Returns a seemingly random integer between 0 and 3
 int random_int()
 {
-	int random = (TMR3 + score) % 4;
+	// int random = (TMR3 + score) % 4;
+	int random = (TMR3 + score) % 2;
 	TMR3 = 0;
 	return (random);
 }
@@ -207,13 +212,11 @@ int random_int()
 void move_obstacle()
 {	
 	speed = 0.05f * score + 1.0;
-	if (obstacle_x > 0 && (obstacle_x-=speed > 0)){
+	if (obstacle_x + obstacle_width > 0){
 		obstacle_x-=speed;
 	} else
 	{
-		// Shrink the obstacle
-		obstacle_width-=speed;
-		if(obstacle_width <= 1) {
+		if(obstacle_x + obstacle_width <= 1) {
 			spawn_obstacle();
 			score++;
 		}
@@ -224,28 +227,33 @@ void move_obstacle()
 void spawn_obstacle()
 {
 	obstacle_x = OBSTACLE_SPAWN_X;
-	obstacle_width = OBSTACLE_SPAWN_WIDTH;
 	switch (random_int())
 	{
 	case 0: // Spawn a small obstacle on the ground
-		obstacle_y = GROUND_Y - SMALL_OBSTACLE_HEIGHT;
-		obstacle_height = SMALL_OBSTACLE_HEIGHT;
+		obstacle = cactus_small;
+		obstacle_y = GROUND_Y - SMALL_CACTUS_HEIGHT;
+		obstacle_height = SMALL_CACTUS_HEIGHT;
+		obstacle_width = SMALL_CACTUS_WIDTH;
 		break;
 	
 	case 1: // Spawn a big obstacle
-		obstacle_y = GROUND_Y - BIG_OBSTACLE_HEIGHT;
-		obstacle_height = BIG_OBSTACLE_HEIGHT;
+		obstacle = cactus_big;
+		obstacle_y = GROUND_Y - BIG_CACTUS_HEIGHT;
+		obstacle_height = BIG_CACTUS_HEIGHT;
+		obstacle_width = BIG_CACTUS_WIDTH;
 		break;
 	
-	case 2: // Spawn a small obstacle in the middle
-		obstacle_y = MID_AIR_Y - SMALL_OBSTACLE_HEIGHT;
-		obstacle_height = SMALL_OBSTACLE_HEIGHT;
-		break;	
+	// case 2: // Spawn a small obstacle in the middle
+	// 	obstacle_y = MID_AIR_Y - SMALL_OBSTACLE_HEIGHT;
+	// 	obstacle_height = SMALL_OBSTACLE_HEIGHT;
+	// 	obstacle_width = SMALL_OBSTACLE_HEIGHT;
+	// 	break;	
 
-	case 3: // Spawn a small obstacle in the air
-		obstacle_y = HIGH_AIR_Y - SMALL_OBSTACLE_HEIGHT;
-		obstacle_height = SMALL_OBSTACLE_HEIGHT;
-		break;
+	// case 3: // Spawn a small obstacle in the air
+	// 	obstacle_y = HIGH_AIR_Y - SMALL_OBSTACLE_HEIGHT;
+	// 	obstacle_height = SMALL_OBSTACLE_HEIGHT;
+	// 	obstacle_width = SMALL_OBSTACLE_HEIGHT;
+	// 	break;
 
 	default:
 		break;
@@ -261,12 +269,9 @@ void reset_game(void)
     i = 0;
     grass_x = GRASSX;
     grass_x2 = GRASSX + 20;
-    obstacle_x = OBSTACLE_SPAWN_X;
-    obstacle_y = GROUND_Y - SMALL_OBSTACLE_HEIGHT;
-    obstacle_height = SMALL_OBSTACLE_HEIGHT;
-    obstacle_width = OBSTACLE_SPAWN_WIDTH;
     y_velocity = 0;
     speed = 1;
     score = 0;
 	action = RUNNING;
+	spawn_obstacle();
 }

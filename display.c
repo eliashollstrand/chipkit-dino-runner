@@ -440,11 +440,22 @@ void draw_number(int x, int y, int n)
 void draw_image(int x, int y, int width, int height, const uint8_t *data) {
 	int i = 0;
 
-	for (; i < width * height; i++)
-	{
-		if (data[i] == 1)
-		{
-			set_pixel(x + i % width, y + i / width);
+	int outOfBounds = -x;
+
+	for (; i < width * height; i++) {
+		int col = i % width;
+		int row = i / width;
+
+		if (outOfBounds > 0){
+			if (col >= outOfBounds) {
+				if (data[i] == 1) {
+					set_pixel(x + col, y + row);
+				}
+			}
+		} else {
+			if (data[i] == 1) {
+				set_pixel(x + col, y + row);
+			}
 		}
 	}
 }

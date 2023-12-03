@@ -46,6 +46,10 @@ extern const uint8_t const letters[28][25];
 extern const uint8_t const dino[13][15];
 extern const uint8_t const dino_ducking[20][10];
 
+// Declare arrays containing cactae
+extern const uint8_t const cactus_small[6][11];
+extern const uint8_t const cactus_big[8][14];
+
 // Declare an array of numbers
 extern const uint8_t const numbers[10][20];
 

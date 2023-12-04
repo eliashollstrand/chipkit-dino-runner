@@ -57,6 +57,8 @@ float speed;
 
 int score;
 int highscore;
+int dino_frames_passed = 0;
+int dino_ducking_frames_passed = 0;
 
 characterAction action;
 uint8_t *obstacle;
@@ -140,11 +142,29 @@ void draw_character(void)
 	switch (action)
 	{
 	case RUNNING:
-		image = dino;
+		if(dino_frames_passed <= 5) {
+			image = dino1;
+			dino_frames_passed++;
+		} else {
+			image = dino2;
+			dino_frames_passed++;
+			if(dino_frames_passed >= 10) {
+				dino_frames_passed = 0;
+			}
+		}
 		break;
 
 	case DUCKING:
-		image = dino_ducking;
+		if(dino_ducking_frames_passed <= 5) {
+			image = dino_ducking1;
+			dino_ducking_frames_passed++;
+		} else {
+			image = dino_ducking2;
+			dino_ducking_frames_passed++;
+			if(dino_ducking_frames_passed >= 10) {
+				dino_ducking_frames_passed = 0;
+			}
+		}
 		break;
 	
 	default:

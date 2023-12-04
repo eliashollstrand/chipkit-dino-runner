@@ -43,8 +43,10 @@ extern char textbuffer[4][16];
 extern const uint8_t const letters[28][25];
 
 // Declare an array containing dino character
-extern const uint8_t const dino[13][15];
-extern const uint8_t const dino_ducking[20][10];
+extern const uint8_t const dino1[13][15];
+extern const uint8_t const dino2[13][15];
+extern const uint8_t const dino_ducking1[20][10];
+extern const uint8_t const dino_ducking2[20][10];
 
 // Declare arrays containing cactae
 extern const uint8_t const cactus_small[6][11];

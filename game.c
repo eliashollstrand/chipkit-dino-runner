@@ -32,7 +32,7 @@ For copyright and licensing, see file COPYING
 #define GRAVITY 0.5f
 #define GROUND_Y 31
 #define MID_AIR_Y 25
-#define HIGH_AIR_Y 20
+#define HIGH_AIR_Y GROUND_Y - 11
 #define DINO_STANDING_WIDTH 13
 #define DINO_STANDING_HEIGHT 15
 #define DINO_DUCKING_HEIGHT 10
@@ -57,8 +57,10 @@ float speed;
 
 int score;
 int highscore;
+// int dino_dino_frames_passed = 0;
+// int dino_ducking_dino_frames_passed = 0;
 int dino_frames_passed = 0;
-int dino_ducking_frames_passed = 0;
+int bird_frames_passed = 0;
 
 characterAction action;
 uint8_t *obstacle;
@@ -155,14 +157,14 @@ void draw_character(void)
 		break;
 
 	case DUCKING:
-		if(dino_ducking_frames_passed <= 5) {
+		if(dino_frames_passed <= 5) {
 			image = dino_ducking1;
-			dino_ducking_frames_passed++;
+			dino_frames_passed++;
 		} else {
 			image = dino_ducking2;
-			dino_ducking_frames_passed++;
-			if(dino_ducking_frames_passed >= 10) {
-				dino_ducking_frames_passed = 0;
+			dino_frames_passed++;
+			if(dino_frames_passed >= 10) {
+				dino_frames_passed = 0;
 			}
 		}
 		break;
@@ -235,6 +237,20 @@ void move_obstacle()
 	speed = 0.05f * score + 2.0;
 	if (obstacle_x + obstacle_width > 0){
 		obstacle_x-=speed;
+
+		if(obstacle == bird1 && bird_frames_passed < 3) {
+			bird_frames_passed++;
+			if(bird_frames_passed == 3) {
+				obstacle = bird2;
+				bird_frames_passed = 0;
+			}
+		} else if(obstacle == bird2 && bird_frames_passed < 3){
+			bird_frames_passed++;
+			if(bird_frames_passed == 3) {
+				obstacle = bird1;
+				bird_frames_passed = 0;
+			}
+		}
 	} else
 	{
 		if(obstacle_x + obstacle_width <= 1) {
@@ -265,14 +281,14 @@ void spawn_obstacle()
 		break;
 	
 	case 2: // Spawn a bird at low height
-		obstacle = bird;
+		obstacle = bird1;
 		obstacle_y = MID_AIR_Y - BIRD_HEIGHT;
 		obstacle_height = BIRD_HEIGHT;
 		obstacle_width = BIRD_WIDTH;
 		break;	
 
 	case 3: // Spawn a bird at high height
-		obstacle = bird;
+		obstacle = bird1;
 		obstacle_y = HIGH_AIR_Y - BIRD_HEIGHT;
 		obstacle_height = BIRD_HEIGHT;
 		obstacle_width = BIRD_WIDTH;

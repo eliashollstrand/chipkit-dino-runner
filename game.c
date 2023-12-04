@@ -212,7 +212,7 @@ int random_int()
 
 void move_obstacle()
 {	
-	speed = 0.05f * score + 1.0;
+	speed = 0.05f * score + 2.0;
 	if (obstacle_x + obstacle_width > 0){
 		obstacle_x-=speed;
 	} else

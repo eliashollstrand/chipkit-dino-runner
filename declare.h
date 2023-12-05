@@ -59,11 +59,15 @@ extern const uint8_t const bird2[12][6];
 // Declare an array of numbers
 extern const uint8_t const numbers[10][20];
 
+// Declare an array containing arrow_up
+extern const uint8_t const arrow_up [5][5];
+
 // gamestates for the game
 typedef enum {
     MENU_STATE,
     GAME_STATE,
-    GAME_OVER_STATE
+    GAME_OVER_STATE,
+    ENTER_NAME_STATE
 } GameState;
 
 typedef enum {
@@ -84,5 +88,9 @@ void change_state(GameState newState);
 extern uint8_t leaderboard[6];
 
 #define NUM_LEADERBOARD_ENTRIES 6
+#define INITIALS_LENGTH 3
 
 extern uint8_t leaderboard_scores[NUM_LEADERBOARD_ENTRIES];
+
+extern char leaderboard_initials[NUM_LEADERBOARD_ENTRIES][INITIALS_LENGTH];
+extern int letter_index;

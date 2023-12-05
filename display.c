@@ -459,3 +459,15 @@ void draw_image(int x, int y, int width, int height, const uint8_t *data) {
 		}
 	}
 }
+
+void substring(char source[], char dest[], int start, int length) {
+    int i, j;
+
+    // Copy 'length' characters from 'source' starting at index 'start'
+    for (i = start, j = 0; j < length && source[i] != '\0'; ++i, ++j) {
+        dest[j] = source[i];
+    }
+
+    // Null-terminate the destination string
+    dest[j] = '\0';
+}

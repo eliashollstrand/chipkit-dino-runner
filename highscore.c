@@ -224,3 +224,68 @@ void insert_score(uint8_t score)
         i++;
     }
 }
+
+#define INITIALS_ADDRESS 0x0000
+void write_initials(char *initials, int index)
+{
+    // Step 1: Send start condition
+    i2c_start();
+
+    // Step 2: Send EEPROM device address with RW-bit 
+    i2c_send(EEPROM_WRITE);
+
+    uint16_t address = INITIALS_ADDRESS + INITIALS_LENGTH*index;
+
+    // Step 3: Send the memory address you want to write to, assuming 16 bit address (KOLLA PÅ DET HÄR)
+    i2c_send((uint8_t)(address >> 8)); // MSB of address (ÖVRE HALVAN)
+    i2c_send((uint8_t)(address & 0xFF)); // LSB of address (NEDRE HALVAN)
+
+    // Step 4: Send the data to be written
+    int i = 0;
+    while (initials[i] != 0) {
+        i2c_send(initials[i]);
+        initials++;
+    }
+
+    // Step 5
+    i2c_stop();
+
+    // Add a delay to allow the EEPROM to complete the write operation
+    delay(I2C_DELAY); // Delay to allow the EEPROM to complete the write operation, can display 255 without delay if read too quickly
+}
+
+void read_initials(char *initials, int index)
+{
+    // Step 1: Send start condition
+    i2c_start();
+
+    // Step 2: Send EEPROM device address with RW-bit = 0
+    i2c_send(EEPROM_WRITE);
+
+    uint16_t address = INITIALS_ADDRESS + INITIALS_LENGTH * index;
+
+    // Step 3: Send the memory address you want to read from
+    i2c_send((uint8_t)(address >> 8)); // MSB of address
+    i2c_send((uint8_t)(address & 0xFF)); // LSB of address
+
+    // Step 4: Send restart condition
+    i2c_restart();
+
+    // Step 5: Send EEPROM device address with read bit set again
+    i2c_send(EEPROM_READ);
+
+    // Step 6: Receive the data from the EEPROM
+    int i = 0;
+    while (i < INITIALS_LENGTH - 1) {
+        initials[i] = i2c_recv();
+        i2c_ack();
+        i++;
+    }
+
+    // Receive the last data byte from the EEPROM
+    initials[i] = i2c_recv();
+    i2c_nack();
+
+    // Step 8: Send stop condition
+    i2c_stop();
+}

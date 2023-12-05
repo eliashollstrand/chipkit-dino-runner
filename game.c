@@ -29,7 +29,7 @@ For copyright and licensing, see file COPYING
 #define BIRD_WIDTH 12
 #define BIRD_HEIGHT 6
 #define JUMP_VELOCITY -4
-#define GRAVITY 0.5f
+#define GRAVITY 0.4f
 #define GROUND_Y 31
 #define MID_AIR_Y 25
 #define HIGH_AIR_Y GROUND_Y - 11
@@ -107,7 +107,7 @@ void update_game(void)
 	move_obstacle();
 
 	// Check for collisions
-	// check_collision();
+	check_collision();
 }
 
 void draw_ground(void)
@@ -213,7 +213,7 @@ void move_character()
 void check_collision()
 {
 	// Check if the character is colliding with the obstacle
-	if (character_x + character_width >= obstacle_x && character_x <= obstacle_x + obstacle_width) // Check if the character is in the x range of the obstacle
+	if (character_x + character_width - 3 >= obstacle_x + 3 && character_x + 3 <= obstacle_x + obstacle_width - 3) // Check if the character is in the x range of the obstacle
 	{
 		if (obstacle_y + obstacle_height >= character_y && obstacle_y <= character_y + character_height) // Check if the character is in the y range of the obstacle
 		{
@@ -255,6 +255,7 @@ void move_obstacle()
 	{
 		if(obstacle_x + obstacle_width <= 1) {
 			spawn_obstacle();
+			increment_LEDs();
 			score++;
 		}
 	}

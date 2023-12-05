@@ -49,6 +49,20 @@ check_for_input()
 			delay_counter = 0;
 			break;
 
+		case ENTER_NAME_STATE:
+			if (getbtns() & 0x4) {
+				// initials[letter_index]++;
+				// if (initials[letter_index] > 'z') {
+				// 	initials[letter_index] = 'a';
+				// }
+			}
+			else if (getbtns() & 0x1) {
+				letter_index = (letter_index + 1)%3;
+			}
+
+			delay_counter = 0;
+			break;
+
 		default:
 			break;
 		}
@@ -83,6 +97,11 @@ void user_isr(void)
 			draw_gameover();
 			break;
 
+		case ENTER_NAME_STATE:
+			check_for_input();
+			draw_enter_name();
+			break;
+
 		default:
 			break;
 		}
@@ -105,14 +124,32 @@ void change_state(GameState newState)
 	}
 }
 
+// char test[NUM_LEADERBOARD_ENTRIES][INITIALS_LENGTH] = {{'a', 'b', 'c'}, {'d', 'e', 'f'}, {'g', 'h', 'i'}, {'j', 'k', 'l'}, {'m', 'n', 'o'}};
+char test[NUM_LEADERBOARD_ENTRIES][INITIALS_LENGTH] = {"abc", "def", "ghi", "jkl", "mno", "pqr"};
+
 int main(void)
 {
 	/* Set up timers, interrupts, input and outputs, display, I2C etc. */
 	chip_init();
-	currentState = MENU_STATE;
+	// currentState = MENU_STATE;
+	// highscore = read_highscore();
+	// read_leaderboard();
 
-	highscore = read_highscore();
-	read_leaderboard();
+	currentState = ENTER_NAME_STATE;
+
+	int i;
+	for (i = 0; i < NUM_LEADERBOARD_ENTRIES; i++)
+	{
+		write_initials(test[i], i);
+		read_initials(leaderboard_initials[i], i);
+	}
+	// write_initials(test[2], 0);
+	// read_initials(leaderboard_initials[0], 0);
+	// read_initials(leaderboard_initials[5], 5);
+	// read_initials(leaderboard_initials[6], 6);
+
+	// read_leaderboard();
+	
 
 	while (1)
 	{

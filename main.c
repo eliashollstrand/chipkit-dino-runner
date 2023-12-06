@@ -51,10 +51,14 @@ check_for_input()
 
 		case ENTER_NAME_STATE:
 			if (getbtns() & 0x4) {
-				// initials[letter_index]++;
-				// if (initials[letter_index] > 'z') {
-				// 	initials[letter_index] = 'a';
-				// }
+				initials[letter_index]++;
+				if (initials[letter_index] > 'z') {
+					initials[letter_index] = 'a';
+				}
+			}
+			else if (getbtns() & 0x2) {
+				insert_initials(initials, 0);
+				change_state(GAME_OVER_STATE);
 			}
 			else if (getbtns() & 0x1) {
 				letter_index = (letter_index + 1)%3;
@@ -131,24 +135,10 @@ int main(void)
 {
 	/* Set up timers, interrupts, input and outputs, display, I2C etc. */
 	chip_init();
-	// currentState = MENU_STATE;
-	// highscore = read_highscore();
-	// read_leaderboard();
+	currentState = MENU_STATE;
+	read_leaderboard();
+	highscore = leaderboard_scores[0];
 
-	currentState = ENTER_NAME_STATE;
-
-	int i;
-	for (i = 0; i < NUM_LEADERBOARD_ENTRIES; i++)
-	{
-		write_initials(test[i], i);
-		read_initials(leaderboard_initials[i], i);
-	}
-	// write_initials(test[2], 0);
-	// read_initials(leaderboard_initials[0], 0);
-	// read_initials(leaderboard_initials[5], 5);
-	// read_initials(leaderboard_initials[6], 6);
-
-	// read_leaderboard();
 	
 
 	while (1)

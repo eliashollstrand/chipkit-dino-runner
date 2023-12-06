@@ -28,6 +28,7 @@ volatile int *trise = (volatile int *)0xbf886100;
 #define EEPROM_WRITE 0xA0 // 1010 0000
 #define EEPROM_READ 0xA1  // 1010 0001
 #define SCORE_ADDRESS 0x0230
+#define INITIALS_ADDRESS 0x0000
 #define I2C_DELAY 500000 // Delay to allow the EEPROM to complete the write operation, experiment more
 
 uint8_t current_address_read() {
@@ -183,50 +184,7 @@ void read_multiple_scores(uint8_t *scores, int size)
     i2c_stop();
 }
 
-void read_leaderboard()
-{
-    read_multiple_scores(leaderboard_scores, NUM_LEADERBOARD_ENTRIES);
-}
-
-void print_leaderboard()
-{
-    int i = 0;
-    while (i < NUM_LEADERBOARD_ENTRIES) {
-        draw_number(i*17, 10, leaderboard_scores[i]);
-        i++;
-    }
-}
-
-void draw_leaderboard()
-{
-    clear_all_pixels();
-    draw_string(30, 3, "leaderboard");
-    print_leaderboard();
-    display_objects();
-}
-
-void insert_score(uint8_t score)
-{
-    int i = 0;
-    while (i < NUM_LEADERBOARD_ENTRIES) {
-        if (score > leaderboard_scores[i]) {
-            // Shift down all scores below this one
-            int j;
-            for (j = NUM_LEADERBOARD_ENTRIES - 1; j > i; j--) {
-                leaderboard_scores[j] = leaderboard_scores[j - 1];
-            }
-            // Insert the new score
-            leaderboard_scores[i] = score;
-            write_multiple_scores(leaderboard_scores);
-            highscore = read_highscore();
-            break;
-        }
-        i++;
-    }
-}
-
-#define INITIALS_ADDRESS 0x0000
-void write_initials(char *initials, int index)
+void write_initials(char *initials)
 {
     // Step 1: Send start condition
     i2c_start();
@@ -234,11 +192,9 @@ void write_initials(char *initials, int index)
     // Step 2: Send EEPROM device address with RW-bit 
     i2c_send(EEPROM_WRITE);
 
-    uint16_t address = INITIALS_ADDRESS + INITIALS_LENGTH*index;
-
     // Step 3: Send the memory address you want to write to, assuming 16 bit address (KOLLA PÅ DET HÄR)
-    i2c_send((uint8_t)(address >> 8)); // MSB of address (ÖVRE HALVAN)
-    i2c_send((uint8_t)(address & 0xFF)); // LSB of address (NEDRE HALVAN)
+    i2c_send((uint8_t)(INITIALS_ADDRESS >> 8)); // MSB of address (ÖVRE HALVAN)
+    i2c_send((uint8_t)(INITIALS_ADDRESS & 0xFF)); // LSB of address (NEDRE HALVAN)
 
     // Step 4: Send the data to be written
     int i = 0;
@@ -254,7 +210,7 @@ void write_initials(char *initials, int index)
     delay(I2C_DELAY); // Delay to allow the EEPROM to complete the write operation, can display 255 without delay if read too quickly
 }
 
-void read_initials(char *initials, int index)
+void read_initials(char *initials)
 {
     // Step 1: Send start condition
     i2c_start();
@@ -262,11 +218,9 @@ void read_initials(char *initials, int index)
     // Step 2: Send EEPROM device address with RW-bit = 0
     i2c_send(EEPROM_WRITE);
 
-    uint16_t address = INITIALS_ADDRESS + INITIALS_LENGTH * index;
-
     // Step 3: Send the memory address you want to read from
-    i2c_send((uint8_t)(address >> 8)); // MSB of address
-    i2c_send((uint8_t)(address & 0xFF)); // LSB of address
+    i2c_send((uint8_t)(INITIALS_ADDRESS >> 8)); // MSB of address
+    i2c_send((uint8_t)(INITIALS_ADDRESS & 0xFF)); // LSB of address
 
     // Step 4: Send restart condition
     i2c_restart();
@@ -276,7 +230,7 @@ void read_initials(char *initials, int index)
 
     // Step 6: Receive the data from the EEPROM
     int i = 0;
-    while (i < INITIALS_LENGTH - 1) {
+    while (i < INITIALS_LENGTH * NUM_LEADERBOARD_ENTRIES - 1) {
         initials[i] = i2c_recv();
         i2c_ack();
         i++;
@@ -288,4 +242,68 @@ void read_initials(char *initials, int index)
 
     // Step 8: Send stop condition
     i2c_stop();
+}
+
+void read_leaderboard()
+{
+    read_multiple_scores(leaderboard_scores, NUM_LEADERBOARD_ENTRIES);
+    read_initials(leaderboard_initials[0]);
+}
+
+void print_leaderboard()
+{
+    char initials[3];
+    int i = 0;
+    while (i < NUM_LEADERBOARD_ENTRIES) {
+        draw_number(5 + i*20, 8, i + 1);
+        draw_number(i*20, 15, leaderboard_scores[i]);
+        substring(leaderboard_initials[i], initials, 0, INITIALS_LENGTH);
+        draw_string(i*20, 22, initials);
+        i++;
+    }
+}
+
+void draw_leaderboard()
+{
+    clear_all_pixels();
+    draw_string(30, 0, "leaderboard");
+    print_leaderboard();
+    display_objects();
+}
+
+void insert_initials(char *initials, int index)
+{
+    char to_shift[INITIALS_LENGTH * NUM_LEADERBOARD_ENTRIES - INITIALS_LENGTH * index];
+    substring(leaderboard_initials[index], to_shift, 0, INITIALS_LENGTH * NUM_LEADERBOARD_ENTRIES - INITIALS_LENGTH * index); // Get the initials to shift
+    int i;
+    for (i = 0; i < INITIALS_LENGTH; i++) {
+        leaderboard_initials[index][i] = initials[i];
+    }
+
+    for (i = 0; i < INITIALS_LENGTH * NUM_LEADERBOARD_ENTRIES - INITIALS_LENGTH * index; i++) {
+        leaderboard_initials[index + 1][i] = to_shift[i];
+    }
+    write_initials(leaderboard_initials[index]);
+}
+
+void insert_score(uint8_t score)
+{
+    int i = 0;
+    while (i < NUM_LEADERBOARD_ENTRIES) {
+        if (score > leaderboard_scores[i]) {
+            // Shift down all scores below this one
+            int j;
+            for (j = NUM_LEADERBOARD_ENTRIES - 1; j > i; j--) {
+                leaderboard_scores[j] = leaderboard_scores[j - 1];
+            }
+            // Insert the new score
+            leaderboard_scores[i] = score;
+            insert_initials(leaderboard_initials[0], i);
+            write_multiple_scores(leaderboard_scores);
+            highscore = read_highscore();
+            change_state(ENTER_NAME_STATE);
+            break;
+        }
+        i++;
+    }
 }

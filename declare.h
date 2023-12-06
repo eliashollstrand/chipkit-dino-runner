@@ -94,3 +94,4 @@ extern uint8_t leaderboard_scores[NUM_LEADERBOARD_ENTRIES];
 
 extern char leaderboard_initials[NUM_LEADERBOARD_ENTRIES][INITIALS_LENGTH];
 extern int letter_index;
+extern char initials[3];

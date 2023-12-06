@@ -55,7 +55,7 @@ int obstacle_width;
 float y_velocity;
 float speed;
 
-int score;
+int score = 0;
 int highscore;
 // int dino_dino_frames_passed = 0;
 // int dino_ducking_dino_frames_passed = 0;
@@ -218,7 +218,6 @@ void check_collision()
 		if (obstacle_y + obstacle_height >= character_y && obstacle_y <= character_y + character_height) // Check if the character is in the y range of the obstacle
 		{
 			insert_score(score);
-			change_state(GAME_OVER_STATE);
 		}
 
 	}

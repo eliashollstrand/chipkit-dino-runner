@@ -10,7 +10,7 @@
  * @author Elias Hollstrand
  * @author Mattias Kvist
  *
- * Date: 2023-12-06
+ * @date 2023-12-06
  *
  * For copyright and licensing, see file COPYING.
  */
@@ -372,7 +372,6 @@ void insert_score(uint8_t score) {
             leaderboard_scores[i] = score;
             leaderboard_index = i;
             write_multiple_scores(leaderboard_scores);
-            highscore = read_highscore();
             inserted = true;
             change_state(ENTER_NAME_STATE);
             break;

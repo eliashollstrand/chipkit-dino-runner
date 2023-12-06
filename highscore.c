@@ -343,7 +343,7 @@ void insert_initials(char *initials, int index) {
         leaderboard_initials[index + 1][i] = to_shift[i];
     }
 
-    write_initials(leaderboard_initials[index]);
+    write_initials(leaderboard_initials[0]);
 }
 
 /**

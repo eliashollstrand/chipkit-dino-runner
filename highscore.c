@@ -14,6 +14,7 @@
 #include <stdlib.h>
 #include <pic32mx.h>
 #include "declare.h"
+#include "stdbool.h"
 
 
 int ledValue = 0;
@@ -288,6 +289,7 @@ void insert_initials(char *initials, int index)
 
 void insert_score(uint8_t score)
 {
+    bool inserted = false;
     int i = 0;
     while (i < NUM_LEADERBOARD_ENTRIES) {
         if (score > leaderboard_scores[i]) {
@@ -301,10 +303,13 @@ void insert_score(uint8_t score)
             insert_initials(leaderboard_initials[0], i);
             write_multiple_scores(leaderboard_scores);
             highscore = read_highscore();
+            inserted = true;
             change_state(ENTER_NAME_STATE);
             break;
         }
         i++;
     }
-    change_state(GAME_OVER_STATE);
+    if (!inserted) {
+        change_state(GAME_OVER_STATE);
+    }
 }

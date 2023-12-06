@@ -65,6 +65,8 @@ int bird_frames_passed = 0;
 characterAction action;
 uint8_t *obstacle;
 
+int leaderboard_index;
+
 void update_display(void)
 {
 	// Clear the display
@@ -254,8 +256,8 @@ void move_obstacle()
 	{
 		if(obstacle_x + obstacle_width <= 1) {
 			spawn_obstacle();
-			increment_LEDs();
-			score++;
+			score++;	
+			update_LEDs();
 		}
 	}
 }
@@ -313,4 +315,5 @@ void reset_game(void)
     score = 0;
 	action = RUNNING;
 	spawn_obstacle();
+	update_LEDs();
 }

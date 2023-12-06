@@ -106,10 +106,9 @@ void eeprom_write_byte(uint16_t address, uint8_t data) {
 }
 
 
-void increment_LEDs()
+void update_LEDs()
 {
-    // Increase the LED value by 1 (roll over after 255)
-    ledValue = (ledValue + 1) & 0xFF;
+    ledValue = score;
 
     // Update the LEDs
     *porte = ledValue;
@@ -275,7 +274,7 @@ void draw_leaderboard()
 void insert_initials(char *initials, int index)
 {
     char to_shift[INITIALS_LENGTH * NUM_LEADERBOARD_ENTRIES - INITIALS_LENGTH * index];
-    substring(leaderboard_initials[index], to_shift, 0, INITIALS_LENGTH * NUM_LEADERBOARD_ENTRIES - INITIALS_LENGTH * index); // Get the initials to shift
+    substring(leaderboard_initials[index], to_shift, 0, INITIALS_LENGTH * NUM_LEADERBOARD_ENTRIES - INITIALS_LENGTH * (index-1)); // Get the initials to shift
     int i;
     for (i = 0; i < INITIALS_LENGTH; i++) {
         leaderboard_initials[index][i] = initials[i];
@@ -300,7 +299,7 @@ void insert_score(uint8_t score)
             }
             // Insert the new score
             leaderboard_scores[i] = score;
-            insert_initials(leaderboard_initials[0], i);
+            leaderboard_index = i;
             write_multiple_scores(leaderboard_scores);
             highscore = read_highscore();
             inserted = true;

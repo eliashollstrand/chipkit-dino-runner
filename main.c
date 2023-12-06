@@ -57,7 +57,7 @@ check_for_input()
 				}
 			}
 			else if (getbtns() & 0x2) {
-				insert_initials(initials, 0);
+				insert_initials(initials, leaderboard_index);
 				change_state(GAME_OVER_STATE);
 			}
 			else if (getbtns() & 0x1) {

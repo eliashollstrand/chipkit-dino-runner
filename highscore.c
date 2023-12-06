@@ -306,4 +306,5 @@ void insert_score(uint8_t score)
         }
         i++;
     }
+    change_state(GAME_OVER_STATE);
 }

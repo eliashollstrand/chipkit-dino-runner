@@ -139,6 +139,8 @@ int main(void)
 	read_leaderboard();
 	highscore = leaderboard_scores[0];
 
+
+
 	
 
 	while (1)

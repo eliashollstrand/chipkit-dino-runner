@@ -8,9 +8,9 @@
  * The main function initializes the system, sets the initial game state to MENU_STATE, and reads the leaderboard.
  * It then enters an infinite loop, where the game logic and display updates are performed based on the current state.
  * 
- * @author Axel Isaksson,
- * @author F Lundevall,
- * @author Elias Hollstrand,
+ * @author Axel Isaksson
+ * @author F Lundevall
+ * @author Elias Hollstrand
  * @author Mattias Kvist
  * 
  * Date: 2023-11-01

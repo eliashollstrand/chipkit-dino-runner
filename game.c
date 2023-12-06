@@ -1,25 +1,32 @@
-/*
-Authors:
-Axel Isaksson,
-F Lundevall,
-Elias Hollstrand,
-Mattias Kvist
-
-Date: 2023-11-01
-
-For copyright and licensing, see file COPYING
-*/
+/**
+ * @file game.c
+ * @brief This file contains the implementation of the game logic and display functions.
+ *
+ * This file defines the game logic and display functions for a simple side-scrolling dino runner game.
+ * It includes functions for updating the game state, drawing the ground, character, and obstacles,
+ * checking for collisions, and generating random numbers. The game state includes variables for
+ * the character's position, height, and width, the obstacle's position, height, and width,
+ * the character's action, the score, and the highscore. The display functions are responsible
+ * for updating the display by clearing all pixels, drawing the ground, character, obstacles,
+ * score, and highscore, and displaying the objects. The game logic functions handle moving
+ * the character, moving the obstacle, checking for collisions, and spawning new obstacles.
+ * There is also a function for resetting the game state to its initial values.
+ *
+ * @author Axel Isaksson
+ * @author F Lundevall
+ * @author Elias Hollstrand
+ * @author Mattias Kvist
+ *
+ * Date: 2023-12-06
+ *
+ * For copyright and licensing, see file COPYING
+ */
 
 #include <stdint.h>	 /* Declarations of uint_32 and the like */
 #include <pic32mx.h> /* Declarations of system-specific addresses etc */
 #include "declare.h" /* Declatations for these labs */
 
-#define GRASSX 127
-// #define CHARACTER_WIDTH 5 
-// #define CHARACTER_STANDING_HEIGHT 10 
-// #define DINO_DUCKING_HEIGHT 4 
 #define OBSTACLE_SPAWN_X 127
-// #define OBSTACLE_SPAWN_WIDTH 5
 #define BIG_OBSTACLE_HEIGHT 10
 #define SMALL_OBSTACLE_HEIGHT 5
 #define SMALL_CACTUS_WIDTH 6
@@ -45,9 +52,6 @@ int character_x;
 float character_y;
 int character_height;
 int character_width;
-int i;
-int grass_x;
-int grass_x2;
 int obstacle_x;
 int obstacle_y;
 int obstacle_height;
@@ -57,8 +61,6 @@ float speed;
 
 int score = 0;
 int highscore;
-// int dino_dino_frames_passed = 0;
-// int dino_ducking_dino_frames_passed = 0;
 int dino_frames_passed = 0;
 int bird_frames_passed = 0;
 
@@ -67,84 +69,89 @@ uint8_t *obstacle;
 
 int leaderboard_index;
 
-void update_display(void)
-{
-	// Clear the display
+/**
+ * @brief draws everything on the screen.
+ * 
+ * Updates the display by clearing all pixels, drawing the ground, character, obstacles,
+ * score, and highscore, and displaying the objects.
+ */
+void update_display(void) {
 	clear_all_pixels();
 
-	// Draw the ground
 	draw_ground();
 
-	// Draw the grass
-	// draw_grass();
-
-	// Draw the character
 	draw_character();
 
 	draw_obstacles();
 
 	draw_string(0, 0, "score: ");
+
 	draw_number(35, 0, score);
 
 	draw_string(50, 0, "highscore: ");
+	
 	draw_number(110, 0, highscore);
 
-	// Update the display
 	display_objects();
 }
 
-void update_game(void)
-{
-	// Move the character
+/**
+ * @brief Updates the game state by moving the character, moving the obstacle, and checking for collisions.
+ * 
+ * This function is responsible for updating the game state by performing the following actions:
+ * - Moving the character.
+ * - Moving the obstacle.
+ * - Checking for collisions between the character and the obstacle.
+ * 
+ * @return void
+ */
+void update_game(void) {
 	move_character();
 
-	// Move the grass
-	// grass_x--;
-	// grass_x = grass_x % 128;
-
-	// grass_x2--;
-	// grass_x2 = grass_x2 % 128;
-
-	// Move the obstacle
 	move_obstacle();
 
-	// Check for collisions
 	check_collision();
 }
 
-void draw_ground(void)
-{
+/**
+ * @brief Draws the ground on the screen.
+ * 
+ * This function fills a rectangle on the screen to represent the ground.
+ * The rectangle starts at coordinates (0, 31) and has a width of 128 pixels
+ * and a height of 1 pixel.
+ */
+void draw_ground(void) {
 	fill_rectangle(0, 31, 128, 1);
 }
 
-// void draw_grass(void)
-// {
-// 	set_pixel(grass_x, 30);
-// 	set_pixel(grass_x, 29);
-// 	set_pixel(grass_x - 1, 28);
-// 	set_pixel(grass_x + 1, 28);
 
-// 	set_pixel(grass_x2, 30);
-// 	set_pixel(grass_x2, 29);
-// 	set_pixel(grass_x2 - 1, 28);
-// 	set_pixel(grass_x2 + 1, 28);
-// }
-
-void draw_obstacles(void)
-{
+/**
+ * @brief Draws the obstacles on the screen.
+ 
+ * The width of the obstacle is adjusted if it exceeds the screen width.
+ */
+void draw_obstacles(void) {
 	int width = obstacle_width;
-	if (obstacle_x + obstacle_width > 128)
-	{
+
+	if (obstacle_x + obstacle_width > 128) {
 		width = 128 - obstacle_x;
 	}
+
 	draw_image(obstacle_x, obstacle_y, width, obstacle_height, obstacle);
 }
 
-void draw_character(void)
-{
+/**
+ * @brief Draws the character on the screen based on the current action and animation frames.
+
+ * The character image is selected based on the action and the number of frames passed.
+ * If the action is RUNNING, the character image alternates between dino1 and dino2 every 5 frames (running animation).
+ * If the action is DUCKING, the character image alternates between dino_ducking1 and dino_ducking2 every 5 frames (ducking and running).
+ * The character's position and dimensions are passed to the draw_image function to draw the image on the screen.
+ */
+void draw_character(void) {
 	uint8_t *image;
-	switch (action)
-	{
+
+	switch(action) {
 	case RUNNING:
 		if(dino_frames_passed <= 5) {
 			image = dino1;
@@ -174,26 +181,24 @@ void draw_character(void)
 	default:
 		break;
 	}
+
 	draw_image(character_x, (int)character_y, character_width, character_height, image);
 }
 
-void move_character()
-{
+/**
+ * @brief Moves the character based on button presses and updates its position.
+ */
+void move_character() {
 	// check for button presses
-	if (getbtns() == BTN4 && character_y > 10 && y_velocity <= 0) // BTN4
-	{
+	if(getbtns() == BTN4 && character_y > 10 && y_velocity <= 0) { // BTN4
 		y_velocity = JUMP_VELOCITY;
 		action = RUNNING;
-	}
-	else if (getbtns() == BTN3 && character_y == GROUND_Y - character_height) // BTN3
-	{
+	} else if (getbtns() == BTN3 && character_y == GROUND_Y - character_height) { // BTN3
 		character_height = DINO_DUCKING_HEIGHT;
 		character_width = DINO_DUCKING_WIDTH;
 		character_y = 31 - DINO_DUCKING_HEIGHT;
 		action = DUCKING;
-	}
-	else if (!(getbtns() == BTN3) && character_height == DINO_DUCKING_HEIGHT)
-	{
+	} else if (!(getbtns() == BTN3) && character_height == DINO_DUCKING_HEIGHT) {
 		character_height = DINO_STANDING_HEIGHT;
 		character_width = DINO_STANDING_WIDTH;
 		action = RUNNING;
@@ -201,59 +206,68 @@ void move_character()
 
 	// Update the character's y position
 	y_velocity += GRAVITY;
-	if (character_y + y_velocity > GROUND_Y - character_height) 
-	{
+	if(character_y + y_velocity > GROUND_Y - character_height) {
 		character_y = GROUND_Y - character_height;
 		y_velocity = 0;
-	}
-	else
-	{
+	} else {
 		character_y += y_velocity;
 	}
 }
 
-void check_collision()
-{
+/**
+ * @brief Checks if the character is colliding with the obstacle.
+ * 
+ * If there is a collision, it calls insert_score().
+ */
+void check_collision() {
 	// Check if the character is colliding with the obstacle
-	if (character_x + character_width - 3 >= obstacle_x + 3 && character_x + 3 <= obstacle_x + obstacle_width - 3) // Check if the character is in the x range of the obstacle
-	{
-		if (obstacle_y + obstacle_height >= character_y && obstacle_y <= character_y + character_height) // Check if the character is in the y range of the obstacle
-		{
+	if(character_x + character_width - 3 >= obstacle_x + 3 && character_x + 3 <= obstacle_x + obstacle_width - 3) { // Check if the character is in the x range of the obstacle
+		if(obstacle_y + obstacle_height >= character_y && obstacle_y <= character_y + character_height) { // Check if the character is in the y range of the obstacle
 			insert_score(score);
 		}
-
 	}
 }
 
-// Returns a seemingly random integer between 0 and 3
-int random_int()
-{
+/**
+ * @brief Generates a seemingly random integer based on the value of TMR3 and the score.
+ * 
+ * @return The generated random integer.
+ */
+int random_int() {
 	int random = (TMR3 + score) % 4;
 	TMR3 = 0;
-	return (random);
+	return random;
 }
 
-void move_obstacle()
-{	
+/**
+ * @brief Moves the obstacle in the game.
+ 
+ * The speed of the obstacle is determined by the score.
+ * If the obstacle is off the screen, a new obstacle is spawned and the score is incremented.
+ * update_LEDs() is called to visualize the score.
+ */
+void move_obstacle() {	
 	speed = 0.05f * score + 2.0;
-	if (obstacle_x + obstacle_width > 0){
+	
+	if(obstacle_x + obstacle_width > 0) {
 		obstacle_x-=speed;
 
 		if(obstacle == bird1 && bird_frames_passed < 3) {
 			bird_frames_passed++;
+
 			if(bird_frames_passed == 3) {
 				obstacle = bird2;
 				bird_frames_passed = 0;
 			}
 		} else if(obstacle == bird2 && bird_frames_passed < 3){
 			bird_frames_passed++;
+
 			if(bird_frames_passed == 3) {
 				obstacle = bird1;
 				bird_frames_passed = 0;
 			}
 		}
-	} else
-	{
+	} else {
 		if(obstacle_x + obstacle_width <= 1) {
 			spawn_obstacle();
 			score++;	
@@ -262,12 +276,17 @@ void move_obstacle()
 	}
 }
 
-// Spawn a new obstacle
-void spawn_obstacle()
-{
+/**
+ * @brief spawns an obstacle in the game.
+ * 
+ * This function spawns an obstacle in the game. The type of obstacle spawned 
+ * is determined randomly. The obstacle's position, height, and width are set 
+ * based on the type of obstacle.
+ */
+void spawn_obstacle() {
 	obstacle_x = OBSTACLE_SPAWN_X;
-	switch (random_int())
-	{
+
+	switch(random_int()) {
 	case 0: // Spawn a small obstacle on the ground
 		obstacle = cactus_small;
 		obstacle_y = GROUND_Y - SMALL_CACTUS_HEIGHT;
@@ -301,18 +320,20 @@ void spawn_obstacle()
 	}
 }
 
-void reset_game(void)
-{
-    character_x = 10;
-    character_y = GROUND_Y - DINO_STANDING_HEIGHT;
-    character_height = DINO_STANDING_HEIGHT;
+/**
+ * @brief Resets the game state to its initial values.
+ * 
+ * This function resets the character's position, height, width, velocity, speed, score, and action.
+ * It also calls the spawn_obstacle() function to generate a new obstacle and updates the LEDs.
+ */
+void reset_game(void) {
+	character_x = 10;
+	character_y = GROUND_Y - DINO_STANDING_HEIGHT;
+	character_height = DINO_STANDING_HEIGHT;
 	character_width = DINO_STANDING_WIDTH;
-    i = 0;
-    grass_x = GRASSX;
-    grass_x2 = GRASSX + 20;
-    y_velocity = 0;
-    speed = 1;
-    score = 0;
+	y_velocity = 0;
+	speed = 1;
+	score = 0;
 	action = RUNNING;
 	spawn_obstacle();
 	update_LEDs();

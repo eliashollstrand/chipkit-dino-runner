@@ -90,7 +90,7 @@ void check_for_input() {
  * - MENU_STATE: Checks for user input and draws the menu.
  * - GAME_STATE: Updates the game logic and updates the display.
  * - GAME_OVER_STATE: Checks for user input and draws the game over screen.
- * - ENTER_NAME_STATE: Checks for user input and draws the enter name screen.
+ * - ENTER_NAME_STATE: Checks for user input and draws the enter name screen. Reads the leaderboard.
  */
 void user_isr(void) {
 	if(IFS(0) & 0x100) { // Timer 2 interrupt
@@ -116,6 +116,7 @@ void user_isr(void) {
 		case ENTER_NAME_STATE:
 			check_for_input();
 			draw_enter_name();
+			read_multiple_scores(leaderboard_scores, NUM_LEADERBOARD_ENTRIES);
 			break;
 
 		default:
@@ -143,7 +144,6 @@ void change_state(GameState newState) {
 			break;
 	}
 }
-
 
 /**
  * @brief The main function of the program.

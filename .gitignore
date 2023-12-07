@@ -1,3 +1,5 @@
 *.o
 *.P
 *.elf
+*.hex
+*.json

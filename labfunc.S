@@ -1,13 +1,17 @@
+# This file contains relevant assembly code from the labs in IS1500
+
 # Authors: 
 # Axel Isaksson,
 # F Lundevall,
 # Elias Hollstrand,
 # Mattias Kvist
 
-# Date: 2023-11-01
+# Macros written by Axel Isaksson and F Lundevall
+# Interrupt enable written by Elias Hollstrand and Mattias Kvist 2023
+
+# Date: 2023-12-07
 
 # For copyright and licensing, see file COPYING 
-
 
 .macro	PUSH reg
 	addi	$sp,$sp,-4

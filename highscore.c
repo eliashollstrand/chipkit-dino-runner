@@ -373,6 +373,7 @@ void insert_score(uint8_t score) {
             leaderboard_index = i;
             write_multiple_scores(leaderboard_scores);
             inserted = true;
+            highscore = leaderboard_scores[0];
             change_state(ENTER_NAME_STATE);
             break;
         }

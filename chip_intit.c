@@ -1,11 +1,35 @@
-#include <stdint.h>	 /* Declarations of uint_32 and the like */
-#include <pic32mx.h> /* Declarations of system-specific addresses etc */
-#include "declare.h" /* Declatations for these labs */
+/**
+ * @file chip_init.c
+ * @brief Initialization function for the chip
+ *
+ * This file contains the implementation of the chip_init function,
+ * which initializes various peripherals and settings of the chip.
+ * 
+ * @author Axel Isaksson
+ * @author F Lundevall
+ * @author Elias Hollstrand
+ * @author Mattias Kvist
+ * 
+ * @date 2023-12-07
+ *
+ * For copyright and licensing, see file COPYING.
+ */
+
+#include <stdint.h>     /* Declarations of uint_32 and the like */
+#include <pic32mx.h>    /* Declarations of system-specific addresses etc */
+#include "declare.h"    /* Declarations for these labs */
 
 const int FPS = 30;
 
-void chip_init(void)
-{
+/**
+ * @brief Initialize the chip
+ *
+ * This function initializes the peripheral bus clock, sets up output pins,
+ * configures SPI as master, initializes the display, sets up timers,
+ * enables interrupts for switches, sets up change notice interrupts,
+ * initializes input pins, and enables global interrupts.
+ */
+void chip_init(void) {
     /*
     This will set the peripheral bus clock to the same frequency
     as the sysclock. That means 80 MHz, when the microcontroller
@@ -46,6 +70,8 @@ void chip_init(void)
     /* SPI2CON bit ON = 1; */
     SPI2CONSET = 0x8000;
 
+/*--------------------------------------------------------*/
+/* Code by Elias Hollstrand and Mattias Kvist */
     /* Initialize display */
     display_init();
 
@@ -53,7 +79,7 @@ void chip_init(void)
 
     /* Set up timer 2 for display refreshing */
     TMR2 = 0;                    // Reset timer counter
-    PR2 = (80000000 / 256) / FPS; // Set period to 100ms
+    PR2 = (80000000 / 256) / FPS; // Set period to 30 FPS
     T2CON = 0x8070;              // Enable timer 2 (bit 15) and set prescaler to 1:256 (bit 6 and 7)
 
     // /* Set up interrupts for timer 2*/
@@ -85,7 +111,7 @@ void chip_init(void)
     TRISDSET = (1 << 8);
     TRISFSET = (1 << 1);
 
-    // //Initialize port D so that bits 11 through 5 of Port D are set as inputs
+    //Initialize port D so that bits 11 through 5 of Port D are set as inputs
     TRISD = TRISD | 0x0fe0;
 
     /* Initialize I2C*/

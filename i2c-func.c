@@ -4,9 +4,12 @@
  *
  * This file contains the implementation of functions for I2C communication.
  * It provides the necessary functionality to communicate with devices using the I2C protocol.
+ * This code is borrowed from the IS1200 example project hello_temperature: https://github.com/is1200-example-projects/hello-temperature/tree/master 
  *
+ * These functions are used by highscore.c to communicate with the EEPROM memory.
+ * 
  * @author Axel Isaksson
- * @author Mattias Kvist
+ * @author Mattias Kvist (Documentation)
  *
  * @date 2023-12-07
  *

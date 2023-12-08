@@ -1,2 +1,0 @@
-labfunc.S.o: labfunc.S
-labfunc.S :

@@ -1,11 +1,5 @@
 # Makefile from the labs in the course
 
-# Authors: 
-# Axel Isaksson,
-# F Lundevall
-
-# Date: 2023-11-01
-
 # For copyright and licensing, see file COPYING 
 
 # PIC32 device number

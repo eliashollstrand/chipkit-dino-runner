@@ -70,5 +70,3 @@ We had planned to do all the development together, but due to Elias being sick f
 #### What have we learned?
 
 We have learned a lot about the $I^2C$ protocol and how to use it to read and write to EEPROM. We have gained a better understanding of how to use interrupts to handle user input and update the screen. We also improved our debugging skills, as we had to do a lot of it.
-
-<style>h2,h3,h4 { border-bottom: 0; } </style>

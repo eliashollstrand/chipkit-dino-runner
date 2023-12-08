@@ -1,6 +1,6 @@
 # Dino Runner Game for chipKIT uC32
 
-![dino-runner-banner](https://github.com/eliashollstrand/chipkit-dino-runner/tree/main/resources)
+![dino-runner-banner](https://github.com/eliashollstrand/chipkit-dino-runner/blob/main/resources/dino-runner-img.jpg)
 
 A Dino Runner Game developed for the ChipKIT uC32 microcontroller using C, $I^2C$ and the MCB32 toolchain.
 

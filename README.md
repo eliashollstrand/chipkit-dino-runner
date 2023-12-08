@@ -1,4 +1,4 @@
-# Dino Runner Game for chipKIT uC32
+# Dino Runner Game for ChipKIT uC32
 
 ![dino-runner-banner](https://github.com/eliashollstrand/chipkit-dino-runner/blob/main/resources/dino-runner-img.jpg)
 

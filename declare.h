@@ -21,24 +21,24 @@ void display_init(void);
 uint8_t spi_send_recv(uint8_t data);
 
 /*------------------------------------------------------------------*/
-/* Code by Elias Hollstrand and Mattias Kvist */
+/* Code by Elias Hollstrand and Matƒtias Kvist */
 
 // Declare an array of letters
 extern const uint8_t const letters[28][25];
 
 // Declare an array containing dino character
-extern const uint8_t const dino1[13][15];
-extern const uint8_t const dino2[13][15];
-extern const uint8_t const dino_ducking1[20][10];
-extern const uint8_t const dino_ducking2[20][10];
+extern const uint8_t const dino1[195];
+extern const uint8_t const dino2[195];
+extern const uint8_t const dino_ducking1[200];
+extern const uint8_t const dino_ducking2[200];
 
 // Declare arrays containing cactae
-extern const uint8_t const cactus_small[6][11];
-extern const uint8_t const cactus_big[8][14];
+extern const uint8_t const cactus_small[66];
+extern const uint8_t const cactus_big[112];
 
 // Declare array containing bird
-extern const uint8_t const bird1[12][6];
-extern const uint8_t const bird2[12][6];
+extern const uint8_t const bird1[72];
+extern const uint8_t const bird2[72];
 
 // Declare an array of numbers
 extern const uint8_t const numbers[10][20];

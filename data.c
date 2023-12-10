@@ -17,7 +17,7 @@
 #include <stdint.h>   /* Declarations of uint_32 and the like */
 #include <pic32mx.h>  /* Declarations of system-specific addresses etc */
 
-const uint8_t const dino1[13][15] = {
+const uint8_t dino1[195] = {
 	0, 0 ,0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 0,
 	0, 0, 0, 0, 0, 0, 1, 1, 0, 1, 1, 1, 1, 
 	0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 0, 
@@ -35,7 +35,7 @@ const uint8_t const dino1[13][15] = {
 	0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0,
 };
 
-const uint8_t const dino2[13][15] = {
+const uint8_t const dino2[195] = {
 	0, 0 ,0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 0,
 	0, 0, 0, 0, 0, 0, 1, 1, 0, 1, 1, 1, 1, 
 	0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 0, 
@@ -53,7 +53,7 @@ const uint8_t const dino2[13][15] = {
 	0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0,
 };
 
-const uint8_t const dino_ducking1[20][10] = {
+const uint8_t const dino_ducking1[200] = {
 	1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 0,
 	1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 0, 0, 1, 1, 0, 1, 1, 1, 1,
 	1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0,
@@ -66,7 +66,7 @@ const uint8_t const dino_ducking1[20][10] = {
 	0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 };
 
-const uint8_t const dino_ducking2[20][10] = {
+const uint8_t const dino_ducking2[200] = {
 	1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 0,
 	1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 0, 0, 1, 1, 0, 1, 1, 1, 1,
 	1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0,
@@ -79,7 +79,7 @@ const uint8_t const dino_ducking2[20][10] = {
 	0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 };
 
-const uint8_t const cactus_small[6][11] = {
+const uint8_t const cactus_small[66] = {
 	0, 0, 1, 1, 0, 0,
 	0, 0, 1, 1, 0, 1,
 	0, 0, 1, 1, 0, 1,
@@ -93,7 +93,7 @@ const uint8_t const cactus_small[6][11] = {
 	0, 0, 1, 1, 0, 0,
 };
 
-const uint8_t const cactus_big[8][14] = {
+const uint8_t const cactus_big[112] = {
 	0, 0, 0, 1, 1, 0, 0, 0,
 	0, 0, 0, 1, 1, 0, 0, 0,
 	0, 0, 0, 1, 1, 0, 0, 0,
@@ -110,7 +110,7 @@ const uint8_t const cactus_big[8][14] = {
 	0, 0, 0, 1, 1, 0, 0, 0,
 };
 
-const uint8_t const bird1[12][6] = {
+const uint8_t const bird1[72] = {
 	0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0,
 	0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0,
 	0, 0, 1, 1, 0, 0, 1, 1, 1, 0, 0, 0,
@@ -119,7 +119,7 @@ const uint8_t const bird1[12][6] = {
 	0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1,
 };
 
-const uint8_t const bird2[12][6] = {
+const uint8_t const bird2[72] = {
 	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 	0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0,

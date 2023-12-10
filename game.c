@@ -65,53 +65,10 @@ int dino_frames_passed = 0;
 int bird_frames_passed = 0;
 
 characterAction action;
-uint8_t *obstacle;
+const uint8_t *obstacle;
 
 int leaderboard_index;
 
-/**
- * @brief draws everything on the screen.
- * 
- * Updates the display by clearing all pixels, drawing the ground, character, obstacles,
- * score, and highscore, and displaying the objects.
- */
-void update_display(void) {
-	clear_all_pixels();
-
-	draw_ground();
-
-	draw_character();
-
-	draw_obstacles();
-
-	draw_string(0, 0, "score: ");
-
-	draw_number(35, 0, score);
-
-	draw_string(50, 0, "highscore: ");
-	
-	draw_number(110, 0, highscore);
-
-	display_objects();
-}
-
-/**
- * @brief Updates the game state by moving the character, moving the obstacle, and checking for collisions.
- * 
- * This function is responsible for updating the game state by performing the following actions:
- * - Moving the character.
- * - Moving the obstacle.
- * - Checking for collisions between the character and the obstacle.
- * 
- * @return void
- */
-void update_game(void) {
-	move_character();
-
-	move_obstacle();
-
-	check_collision();
-}
 
 /**
  * @brief Draws the ground on the screen.
@@ -149,7 +106,7 @@ void draw_obstacles(void) {
  * The character's position and dimensions are passed to the draw_image function to draw the image on the screen.
  */
 void draw_character(void) {
-	uint8_t *image;
+	const uint8_t *image;
 
 	switch(action) {
 	case RUNNING:
@@ -240,43 +197,6 @@ int random_int() {
 }
 
 /**
- * @brief Moves the obstacle in the game.
- 
- * The speed of the obstacle is determined by the score.
- * If the obstacle is off the screen, a new obstacle is spawned and the score is incremented.
- * update_LEDs() is called to visualize the score.
- */
-void move_obstacle() {	
-	speed = 0.05f * score + 2.0;
-	
-	if(obstacle_x + obstacle_width > 0) {
-		obstacle_x-=speed;
-
-		if(obstacle == bird1 && bird_frames_passed < 3) {
-			bird_frames_passed++;
-
-			if(bird_frames_passed == 3) {
-				obstacle = bird2;
-				bird_frames_passed = 0;
-			}
-		} else if(obstacle == bird2 && bird_frames_passed < 3){
-			bird_frames_passed++;
-
-			if(bird_frames_passed == 3) {
-				obstacle = bird1;
-				bird_frames_passed = 0;
-			}
-		}
-	} else {
-		if(obstacle_x + obstacle_width <= 1) {
-			spawn_obstacle();
-			score++;	
-			update_LEDs();
-		}
-	}
-}
-
-/**
  * @brief spawns an obstacle in the game.
  * 
  * This function spawns an obstacle in the game. The type of obstacle spawned 
@@ -321,6 +241,43 @@ void spawn_obstacle() {
 }
 
 /**
+ * @brief Moves the obstacle in the game.
+ 
+ * The speed of the obstacle is determined by the score.
+ * If the obstacle is off the screen, a new obstacle is spawned and the score is incremented.
+ * update_LEDs() is called to visualize the score.
+ */
+void move_obstacle() {	
+	speed = 0.05f * score + 2.0;
+	
+	if(obstacle_x + obstacle_width > 0) {
+		obstacle_x-=speed;
+
+		if(obstacle == bird1 && bird_frames_passed < 3) {
+			bird_frames_passed++;
+
+			if(bird_frames_passed == 3) {
+				obstacle = bird2;
+				bird_frames_passed = 0;
+			}
+		} else if(obstacle == bird2 && bird_frames_passed < 3){
+			bird_frames_passed++;
+
+			if(bird_frames_passed == 3) {
+				obstacle = bird1;
+				bird_frames_passed = 0;
+			}
+		}
+	} else {
+		if(obstacle_x + obstacle_width <= 1) {
+			spawn_obstacle();
+			score++;	
+			update_LEDs();
+		}
+	}
+}
+
+/**
  * @brief Resets the game state to its initial values.
  * 
  * This function resets the character's position, height, width, velocity, speed, score, and action.
@@ -337,4 +294,48 @@ void reset_game(void) {
 	action = RUNNING;
 	spawn_obstacle();
 	update_LEDs();
+}
+
+/**
+ * @brief draws everything on the screen.
+ * 
+ * Updates the display by clearing all pixels, drawing the ground, character, obstacles,
+ * score, and highscore, and displaying the objects.
+ */
+void update_display(void) {
+	clear_all_pixels();
+
+	draw_ground();
+
+	draw_character();
+
+	draw_obstacles();
+
+	draw_string(0, 0, "score: ");
+
+	draw_number(35, 0, score);
+
+	draw_string(50, 0, "highscore: ");
+	
+	draw_number(110, 0, highscore);
+
+	display_objects();
+}
+
+/**
+ * @brief Updates the game state by moving the character, moving the obstacle, and checking for collisions.
+ * 
+ * This function is responsible for updating the game state by performing the following actions:
+ * - Moving the character.
+ * - Moving the obstacle.
+ * - Checking for collisions between the character and the obstacle.
+ * 
+ * @return void
+ */
+void update_game(void) {
+	move_character();
+
+	move_obstacle();
+
+	check_collision();
 }

@@ -10,7 +10,7 @@
  * @author Elias Hollstrand
  * @author Mattias Kvist
  * 
- * @date 2023-12-07
+ * @date 2023-12-10
  *
  * For copyright and licensing, see file COPYING.
  */
@@ -70,10 +70,11 @@ void chip_init(void) {
     /* SPI2CON bit ON = 1; */
     SPI2CONSET = 0x8000;
 
-/*--------------------------------------------------------*/
-/* Code by Elias Hollstrand and Mattias Kvist */
     /* Initialize display */
     display_init();
+
+/*--------------------------------------------------------*/
+/* Code by Elias Hollstrand and Mattias Kvist */
 
     /* Set up timers */
 
@@ -118,7 +119,7 @@ void chip_init(void) {
     I2C1CON = 0x0;        // Clear control register
     I2C1BRG = 0x0C2;      // Set Baud Generator Divisor to 100
     I2C1STAT = 0x0;       // Clear status register
-    I2C1CONSET = 1 << 13; // SIDL = 1 (disables I2C when CPU is idle)
+    // I2C1CONSET = 1 << 13; // SIDL = 1 (disables I2C when CPU is idle)
     I2C1CONSET = 1 << 15; // I2C ON
     // I2C1ADD = 0b1010000; // add EEPROM address to I2C1ADD register...THIS MESSED THINGS UP
 

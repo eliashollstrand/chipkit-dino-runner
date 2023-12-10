@@ -15,7 +15,7 @@
  * @author Elias Hollstrand 
  * @author Mattias Kvist
  *
- * @date 2023-11-01
+ * @date 2023-12-10
  * 
  * For copyright and licensing, see file COPYING
  */
@@ -181,7 +181,7 @@ void set_pixel(int x, int y) {
 }
 
 /**
- * Clears the pixel at the specified coordinates.
+ * @brief Clears the pixel at the specified coordinates.
  *
  * @param x The x-coordinate of the pixel.
  * @param y The y-coordinate of the pixel.
@@ -303,7 +303,7 @@ void draw_char(int x, int y, char c) {
 }
 
 /**
- * Draws a string at the specified coordinates.
+ * @brief Draws a string at the specified coordinates.
  *
  * @param x The x-coordinate of the starting position.
  * @param y The y-coordinate of the starting position.
@@ -364,7 +364,7 @@ void draw_number(int x, int y, int n) {
 }
 
 /**
- * Draws an image on the display at the specified position.
+ * @brief Draws an image on the display at the specified position.
  *
  * @param x The x-coordinate of the top-left corner of the image.
  * @param y The y-coordinate of the top-left corner of the image.
@@ -395,7 +395,7 @@ void draw_image(int x, int y, int width, int height, const uint8_t *data) {
 }
 
 /**
- * Copies a substring from the source string to the destination string.
+ * @brief Copies a substring from the source string to the destination string.
  *
  * @param source The source string from which to copy the substring.
  * @param dest The destination string where the substring will be copied to.

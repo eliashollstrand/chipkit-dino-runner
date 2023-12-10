@@ -36,6 +36,6 @@ void draw_enter_name() {
     draw_string(0, 16, "enter name:");
     draw_string(75, 16, initials);
     draw_image(75 + letter_index * 6, 24, 5, 5, arrow_up);
-    draw_string(0, 24, "b3:confirm");
+    draw_string(0, 24, "btn3:save");
     display_objects();
 }

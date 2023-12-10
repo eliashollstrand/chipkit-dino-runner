@@ -17,7 +17,7 @@
  * @author Elias Hollstrand
  * @author Mattias Kvist
  *
- * @date 2023-12-06
+ * @date 2023-12-10
  *
  * For copyright and licensing, see file COPYING
  */
@@ -253,6 +253,7 @@ void move_obstacle() {
 	if(obstacle_x + obstacle_width > 0) {
 		obstacle_x-=speed;
 
+		// Animate the bird
 		if(obstacle == bird1 && bird_frames_passed < 3) {
 			bird_frames_passed++;
 

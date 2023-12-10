@@ -66,6 +66,7 @@ void check_for_input() {
 				}
 			}
 			else if(getbtns() & 0x2) {
+				letter_index = 0;
 				insert_initials(initials, leaderboard_index);
 				change_state(GAME_OVER_STATE);
 			}

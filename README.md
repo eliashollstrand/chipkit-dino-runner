@@ -2,7 +2,7 @@
 
 ![dino-runner-banner](https://github.com/eliashollstrand/chipkit-dino-runner/blob/main/resources/dino-runner-img.jpg)
 
-A Dino Runner Game developed for the ChipKIT uC32 microcontroller using C, $I^2C$ and the MCB32 toolchain.
+A Dino Runner Game developed for the ChipKIT uC32 microcontroller and Basic I/O Shield using C, $I^2C$ and the MCB32 toolchain.
 
 Elias Hollstrand  & Mattias Kvist
 
@@ -33,7 +33,7 @@ Our intention was to fulfill the requirements for an **advanced project** throug
 
 ### Solution
 
-We have developed our project on the ChipKIT Uno32 board along with the Basic I/O shield. The display on the shield is used to display the game and the buttons are used to jump and duck. We make use of interrupts from the built-in timer (Timer 2) to handle updating the screen as well as increasing the speed of the game, and dealing with user input.
+We have developed our project on the ChipKIT Uno32 board along with the Basic I/O Shield. The display on the shield is used to display the game and the buttons are used to jump and duck. We make use of interrupts from the built-in timer (Timer 2) to handle updating the screen as well as increasing the speed of the game, and dealing with user input.
 
 The I2C protocol is used for reading and writing to the EEPROM. We use the EEPROM to store the leaderboard containing the top 6 high scores, along with the name (3 letters) of the player who achieved the score. The functions for read and write operations to the EEPROM
 were derived from the [Microchip 24LC256 datasheet](https://ww1.microchip.com/downloads/aemDocuments/documents/MPD/ProductDocuments/DataSheets/24AA256-24LC256-24FC256-256K-I2C-Serial-EEPROM-DS20001203.pdf). They were implemented in the 'highscore.c' file, with the help of the functions in the 'i2c-func.c' file. To know if the bus is not busy, acknowledge polling is used. The functions for reading make use of sequential reads, and writing uses page writing.
@@ -72,3 +72,19 @@ We had planned to do all the development together, but due to Elias being sick f
 #### What have we learned?
 
 We have learned a lot about the $I^2C$ protocol and how to use it to read and write to EEPROM. We have gained a better understanding of how to use interrupts to handle user input and update the screen. We also improved our debugging skills, as we had to do a lot of it.
+
+### Installation Guide
+
+1. Download the files
+
+2. Download the development environment [MCB32 toolchain](`http://github.com/is1200-example-projects/mcb32tools/releases/`).
+
+3. Navigate to the folder contining the files inside the MCB32tools terminal.
+
+4. Connect the ChipKIT uC32 microcontroller along with the Basic I/O Shield.
+
+5. Compile the program using the command `make` in the terminal.
+
+6. Install the program on the ChipKit using the command `make install`. (Remember to specify the port if it is not working correctly eg. `make install TTYDEV=/dev/cu.usbserial-A503WFGV` or something similar).
+
+7. Done! The game should now be running on the ChipKIT.
